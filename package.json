@@ -1,9 +1,9 @@
 {
-"name": "zerostars",
+"name": "zerostars-miniapp",
 "version": "1.0.0",
 "main": "server.js",
 "scripts": {
-"start": "node bot.js & node server.js"
+"start": "node server.js"
 },
 "dependencies": {
 "express": "^4.19.2",
