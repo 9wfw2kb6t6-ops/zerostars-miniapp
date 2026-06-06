@@ -173,7 +173,8 @@ LVL 1
 let coins = 
 let energy = 100;
 let maxEnergy = 100;
-let clickPower = 1;
+let username = prompt("Enter Username");
+  let clickPower = 1;
 let upgradeCost = 50;
 function mine(e){
 
@@ -338,7 +339,28 @@ function createFloating(e){
   },1000);
 
 }
+async function saveScore() {
+    await db.collection("leaderboard")
+    .doc(username)
+    .set({
+        username: username,
+        coins: coins
+    });
+}
 
+async function loadLeaderboard() {
+
+    const snapshot = await db.collection("leaderboard")
+    .orderBy("coins", "desc")
+    .limit(10)
+    .get();
+
+    console.log("=== TOP PLAYERS ===");
+
+    snapshot.forEach(doc => {
+        console.log(doc.data());
+    });
+}
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
