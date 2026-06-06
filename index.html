@@ -1,385 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-<title>ZeroStars</title>
-
-<style>
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-body{
-  background:linear-gradient(180deg,#050510,#111827);
-  color:white;
-  font-family:sans-serif;
-  overflow:hidden;
-}
-
-.app{
-  padding:20px;
-  text-align:center;
-}
-
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:30px;
-}
-
-.logo{
-  font-size:28px;
-  font-weight:bold;
-}
-
-.level{
-  background:#1f2937;
-  padding:10px 16px;
-  border-radius:20px;
-}
-
-.balance{
-  margin-top:20px;
-}
-
-.balance h1{
-  font-size:60px;
-}
-
-.energy-box{
-  width:100%;
-  height:18px;
-  background:#1f2937;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:20px;
-}
-
-.energy-fill{
-  height:100%;
-  width:100%;
-  background:linear-gradient(90deg,#00ff88,#00c2ff);
-  transition:.3s;
-}
-
-.tap-area{
-  margin-top:60px;
-}
-
-.coin{
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  background:linear-gradient(145deg,#ffd700,#ff9900);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin:auto;
-  font-size:90px;
-  cursor:pointer;
-  transition:.1s;
-  box-shadow:0 0 40px rgba(255,215,0,.5);
-}
-
-.coin:active{
-  transform:scale(.92);
-}
-
-.bottom{
-  position:fixed;
-  bottom:0;
-  width:100%;
-  background:#0b1220;
-  display:flex;
-  justify-content:space-around;
-  padding:18px;
-  border-top:1px solid rgba(255,255,255,.1);
-}
-
-.menu-btn{
-  color:#aaa;
-  font-size:14px;
-}
-
-.floating{
-  position:absolute;
-  color:#fff;
-  font-weight:bold;
-  animation:floatUp 1s linear forwards;
-}
-
-@keyframes floatUp{
-  0%{
-    opacity:1;
-    transform:translateY(0);
-  }
-
-  100%{
-    opacity:0;
-    transform:translateY(-80px);
-  }
-}
-
-</style>
+  <!-- CSS -->
 </head>
 <body>
 
-<div class="app">
+  <!-- UI -->
+  <div id="coins">0</div>
+  <div id="energyFill"></div>
+  <div id="energyText"></div>
 
-<div class="topbar">
-<div class="logo">⭐ ZeroStars</div>
+  <!-- Upgrade Button -->
+  <button id="upgradeBtn" onclick="upgradePickaxe()">
+    ⛏ Upgrade (50)
+  </button>
 
-<div class="level">
-LVL 1
-</div>
-</div>
+  <!-- Auto Miner -->
+  <button id="autoBtn" onclick="buyAutoMiner()">
+    🤖 Auto Miner (100)
+  </button>
 
-<div class="balance">
-<p>Total Stars</p>
-<h1 id="coins">0</h1>
-</div>
+  <div id="autoCount">Auto Miners: 0</div>
 
-<div class="energy-box">
-<div class="energy-fill" id="energyFill"></div>
-</div>
+  <!-- Leaderboard -->
+  <div id="leaderboard"></div>
 
-<p id="energyText">100 / 100 Energy</p>
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-<div class="tap-area">
+  <script>
 
-<div class="coin" onclick="mine(event)">
-⭐
-</div>
+  // Firebase Config
+  const firebaseConfig = {
+    apiKey: "...",
+    authDomain: "...",
+    projectId: "zerostars-97e21",
+    storageBucket: "...",
+    messagingSenderId: "617216289630",
+    appId: "..."
+  };
 
-</div>
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
 
-</div>
+  // Variables
+  let coins = 0;
+  let energy = 100;
+  let maxEnergy = 100;
 
-<div class="bottom">
-<div class="menu-btn">🏠 Home</div>
-<div class="menu-btn">👥 Friends</div>
-<div class="menu-btn">🏆 Rank</div>
-<div class="menu-btn">⚙️ Earn</div>
-</div>
-
-<script>
-
-let coins = 
-let energy = 100;
-let maxEnergy = 100;
-let username = prompt("Enter Username");
   let clickPower = 1;
-let upgradeCost = 50;
-function mine(e){
+  let upgradeCost = 50;
 
-  if(energy <= 0) return;
+  let autoMiner = 0;
+  let autoMinerCost = 100;
 
-  coins += clickPower;
-  energy--;
+  let username =
+    localStorage.getItem("username") ||
+    prompt("Enter Username");
 
-  document.getElementById("coins").innerText = coins;
+  localStorage.setItem("username", username);
 
-  updateEnergy();
-function upgradePickaxe(){
-function buyAutoMiner(){
+  // Functions
 
-    if(coins < autoMinerCost) return;
+  function mine(e){
+      if(energy <= 0) return;
 
-    coins -= autoMinerCost;
-    autoMiner++;
+      coins += clickPower;
+      energy--;
 
-    autoMinerCost = Math.floor(autoMinerCost * 1.8);
+      updateUI();
+      createFloating(e, clickPower);
 
-    document.getElementById("coins").innerText = coins;
-
-    document.getElementById("autoBtn").innerText =
-        "🤖 Auto Miner (" + autoMinerCost + ")";
-
-    document.getElementById("autoCount").innerText =
-        "Auto Miners: " + autoMiner;
-}
-    if(coins < upgradeCost) return;
-<button id="autoBtn" onclick="buyAutoMiner()">
-🤖 Auto Miner (100)
-</button>
-
-<div id="autoCount">
-Auto Miners: 0
-</div>
-    coins -= upgradeCost;
-    clickPower++;
-
-    upgradeCost = Math.floor(upgradeCost * 1.5);
-
-    document.getElementById("coins").innerText = coins;
-    document.getElementById("upgradeBtn").innerText =
-        "⛏ Upgrade (" + upgradeCost + ")";
-}
-  createFloating(e, clickPower);
-
-}
-
-function createFloating(e, amount){
-
-  let percent = (energy/maxEnergy)*100;
-
-  document.getElementById("energyFill").style.width = percent + "%";
-<script type="module">
-
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  collection
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "کلید apiKey خودت",
-  authDomain: "مقدار authDomain خودت",
-  projectId: "zerostars-97e21",
-  storageBucket: "مقدار storageBucket",
-  messagingSenderId: "617216289630",
-  appId: "مقدار appId"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-window.db = db;
-window.setDoc = setDoc;
-window.doc = doc;
-window.getDocs = getDocs;
-window.collection = collection;
-
-</script>
-  <body/>
-
-import { initializeApp } from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  getDocs,
-  collection
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "کلید apiKey خودت",
-  authDomain: "مقدار authDomain خودت",
-  projectId: "zerostars-97e21",
-  storageBucket: "مقدار storageBucket",
-  messagingSenderId: "617216289630",
-  appId: "مقدار appId"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-window.db = db;
-window.setDoc = setDoc;
-window.doc = doc;
-window.getDocs = getDocs;
-window.collection = collection;
-
-</script>
-  document.getElementById("energyText").innerText =
-  energy + " / " + maxEnergy + " Energy";
-
-}
-
-setInterval(()=>{
-setInterval(()=>{
-
-    if(autoMiner > 0){
-
-        coins += autoMiner;
-
-        document.getElementById("coins").innerText = coins;
-    }
-
-},1000);
-  if(energy < maxEnergy){
-    energy++;
-    updateEnergy();
+      saveScore();
   }
 
-},1000);
+  function updateUI(){
+      document.getElementById("coins").innerText = coins;
 
-function createFloating(e){
+      let percent =
+        (energy / maxEnergy) * 100;
 
-  let float = document.createElement("div");
+      document.getElementById("energyFill").style.width =
+        percent + "%";
 
-  float.className = "floating";
+      document.getElementById("energyText").innerText =
+        energy + " / " + maxEnergy + " Energy";
+  }
 
-  float.innerText = "+" + amount;
+  function upgradePickaxe(){
+      if(coins < upgradeCost) return;
 
-  float.style.left = e.clientX + "px";
-  float.style.top = e.clientY + "px";
+      coins -= upgradeCost;
+      clickPower++;
 
-  document.body.appendChild(float);
+      upgradeCost =
+        Math.floor(upgradeCost * 1.5);
 
-  setTimeout(()=>{
-    float.remove();
+      document.getElementById("upgradeBtn").innerText =
+        "⛏ Upgrade (" + upgradeCost + ")";
+
+      updateUI();
+  }
+
+  function buyAutoMiner(){
+      if(coins < autoMinerCost) return;
+
+      coins -= autoMinerCost;
+      autoMiner++;
+
+      autoMinerCost =
+        Math.floor(autoMinerCost * 1.8);
+
+      document.getElementById("autoBtn").innerText =
+        "🤖 Auto Miner (" + autoMinerCost + ")";
+
+      document.getElementById("autoCount").innerText =
+        "Auto Miners: " + autoMiner;
+
+      updateUI();
+  }
+
+  function createFloating(e, amount){
+      let float =
+        document.createElement("div");
+
+      float.className = "floating";
+      float.innerText = "+" + amount;
+
+      float.style.left = e.clientX + "px";
+      float.style.top = e.clientY + "px";
+
+      document.body.appendChild(float);
+
+      setTimeout(() => {
+        float.remove();
+      }, 1000);
+  }
+
+  async function saveScore(){
+      await db.collection("leaderboard")
+      .doc(username)
+      .set({
+          username,
+          coins
+      });
+  }
+
+  async function loadLeaderboard(){
+
+      const snapshot =
+        await db.collection("leaderboard")
+        .orderBy("coins","desc")
+        .limit(10)
+        .get();
+
+      let html = "<h3>🏆 Top Players</h3>";
+
+      snapshot.forEach(doc => {
+          const p = doc.data();
+
+          html += `
+            <div>
+              ${p.username} - ${p.coins}
+            </div>
+          `;
+      });
+
+      document.getElementById(
+        "leaderboard"
+      ).innerHTML = html;
+  }
+
+  // Energy Regen
+  setInterval(() => {
+
+      if(energy < maxEnergy){
+          energy++;
+          updateUI();
+      }
+
   },1000);
 
-}
-async function saveScore() {
-    await db.collection("leaderboard")
-    .doc(username)
-    .set({
-        username: username,
-        coins: coins
-    });
-}
+  // Auto Miner
+  setInterval(() => {
 
-async function loadLeaderboard() {
+      if(autoMiner > 0){
 
-    const snapshot = await db.collection("leaderboard")
-    .orderBy("coins", "desc")
-    .limit(10)
-    .get();
+          coins += autoMiner;
 
-    console.log("=== TOP PLAYERS ===");
+          updateUI();
+          saveScore();
+      }
 
-    snapshot.forEach(doc => {
-        console.log(doc.data());
-    });
-}
-</script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  },1000);
+
+  // Refresh Leaderboard
+  setInterval(loadLeaderboard,5000);
+
+  updateUI();
+  loadLeaderboard();
+
+  </script>
+
 </body>
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBfOoEJ0BxhhjkXdL4ae-z5dSrflRG6GQc",
-  authDomain: "zerostars-97e21.firebaseapp.com",
-  projectId: "zerostars-97e21",
-  storageBucket: "zerostars-97e21.firebasestorage.app",
-  messagingSenderId: "617216289630",
-  appId: "1:617216289630:web:d5d44b81af4ed85e113dcf",
-  measurementId: "G-VYWB3L69PK"
-};
-
-firebase.initializeApp(firebaseConfig);
-
-const db = firebase.firestore();
-</script>
-  <button id="upgradeBtn" onclick="upgradePickaxe()">
-⛏ Upgrade (50)
-</button>
+</html>
