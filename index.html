@@ -1,207 +1,124 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <!-- CSS -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroStars</title>
+<style>
+body{font-family:Arial,sans-serif;background:#0f172a;color:white;margin:0;padding:20px;text-align:center}
+.coin{width:180px;height:180px;border-radius:50%;background:gold;color:#111;
+display:flex;align-items:center;justify-content:center;font-size:72px;
+margin:20px auto;cursor:pointer}
+button{padding:10px 15px;margin:5px}
+#leaderboard{margin-top:20px;background:#111827;padding:10px;border-radius:10px}
+.bar{height:16px;background:#1f2937;border-radius:8px;overflow:hidden}
+.fill{height:100%;background:#22c55e;width:100%}
+</style>
 </head>
 <body>
+<h1>⭐ ZeroStars</h1>
+<h2 id="coins">0</h2>
 
-  <!-- UI -->
-  <div id="coins">0</div>
-  <div id="energyFill"></div>
-  <div id="energyText"></div>
+<div class="bar"><div id="energyFill" class="fill"></div></div>
+<p id="energyText">100 / 100 Energy</p>
 
-  <!-- Upgrade Button -->
-  <button id="upgradeBtn" onclick="upgradePickaxe()">
-    ⛏ Upgrade (50)
-  </button>
+<div class="coin" onclick="mine()">⭐</div>
 
-  <!-- Auto Miner -->
-  <button id="autoBtn" onclick="buyAutoMiner()">
-    🤖 Auto Miner (100)
-  </button>
+<button id="upgradeBtn" onclick="upgradePickaxe()">⛏ Upgrade (50)</button>
+<button id="autoBtn" onclick="buyAutoMiner()">🤖 Auto Miner (100)</button>
+<p id="autoCount">Auto Miners: 0</p>
 
-  <div id="autoCount">Auto Miners: 0</div>
+<div id="leaderboard"><h3>🏆 Leaderboard</h3></div>
 
-  <!-- Leaderboard -->
-  <div id="leaderboard"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCXrAg3IseCTaLXCQlyc3t9cflmzjF3YKA",
+  authDomain: "zerostars-bf9c6.firebaseapp.com",
+  projectId: "zerostars-bf9c6",
+  storageBucket: "zerostars-bf9c6.firebasestorage.app",
+  messagingSenderId: "123440971770",
+  appId: "1:123440971770:web:4c8d62f1bc5ca2ebe8ae43"
+};
 
-  <script>
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
 
-  // Firebase Config
-  const firebaseConfig = {
-    apiKey: "...",
-    authDomain: "...",
-    projectId: "zerostars-97e21",
-    storageBucket: "...",
-    messagingSenderId: "617216289630",
-    appId: "..."
-  };
+let coins=0, energy=100, maxEnergy=100;
+let clickPower=1, upgradeCost=50;
+let autoMiner=0, autoMinerCost=100;
 
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+let username=localStorage.getItem("username") || prompt("Enter Username","Player");
+localStorage.setItem("username", username);
 
-  // Variables
-  let coins = 0;
-  let energy = 100;
-  let maxEnergy = 100;
+function updateUI(){
+ document.getElementById("coins").innerText=coins;
+ document.getElementById("energyText").innerText=`${energy} / ${maxEnergy} Energy`;
+ document.getElementById("energyFill").style.width=((energy/maxEnergy)*100)+"%";
+}
 
-  let clickPower = 1;
-  let upgradeCost = 50;
+function mine(){
+ if(energy<=0) return;
+ coins+=clickPower;
+ energy--;
+ updateUI();
+ saveScore();
+}
 
-  let autoMiner = 0;
-  let autoMinerCost = 100;
+function upgradePickaxe(){
+ if(coins<upgradeCost) return;
+ coins-=upgradeCost;
+ clickPower++;
+ upgradeCost=Math.floor(upgradeCost*1.5);
+ document.getElementById("upgradeBtn").innerText=`⛏ Upgrade (${upgradeCost})`;
+ updateUI();
+}
 
-  let username =
-    localStorage.getItem("username") ||
-    prompt("Enter Username");
+function buyAutoMiner(){
+ if(coins<autoMinerCost) return;
+ coins-=autoMinerCost;
+ autoMiner++;
+ autoMinerCost=Math.floor(autoMinerCost*1.8);
+ document.getElementById("autoBtn").innerText=`🤖 Auto Miner (${autoMinerCost})`;
+ document.getElementById("autoCount").innerText=`Auto Miners: ${autoMiner}`;
+ updateUI();
+}
 
-  localStorage.setItem("username", username);
+async function saveScore(){
+ try{
+ await db.collection("leaderboard").doc(username).set({username,coins});
+ }catch(e){console.log(e);}
+}
 
-  // Functions
+async function loadLeaderboard(){
+ try{
+ const snap=await db.collection("leaderboard").orderBy("coins","desc").limit(10).get();
+ let html="<h3>🏆 Leaderboard</h3>";
+ snap.forEach(doc=>{
+   const p=doc.data();
+   html+=`<div>${p.username} - ${p.coins}</div>`;
+ });
+ document.getElementById("leaderboard").innerHTML=html;
+ }catch(e){console.log(e);}
+}
 
-  function mine(e){
-      if(energy <= 0) return;
+setInterval(()=>{
+ if(energy<maxEnergy){energy++;updateUI();}
+},1000);
 
-      coins += clickPower;
-      energy--;
+setInterval(()=>{
+ if(autoMiner>0){
+   coins+=autoMiner;
+   updateUI();
+   saveScore();
+ }
+},1000);
 
-      updateUI();
-      createFloating(e, clickPower);
-
-      saveScore();
-  }
-
-  function updateUI(){
-      document.getElementById("coins").innerText = coins;
-
-      let percent =
-        (energy / maxEnergy) * 100;
-
-      document.getElementById("energyFill").style.width =
-        percent + "%";
-
-      document.getElementById("energyText").innerText =
-        energy + " / " + maxEnergy + " Energy";
-  }
-
-  function upgradePickaxe(){
-      if(coins < upgradeCost) return;
-
-      coins -= upgradeCost;
-      clickPower++;
-
-      upgradeCost =
-        Math.floor(upgradeCost * 1.5);
-
-      document.getElementById("upgradeBtn").innerText =
-        "⛏ Upgrade (" + upgradeCost + ")";
-
-      updateUI();
-  }
-
-  function buyAutoMiner(){
-      if(coins < autoMinerCost) return;
-
-      coins -= autoMinerCost;
-      autoMiner++;
-
-      autoMinerCost =
-        Math.floor(autoMinerCost * 1.8);
-
-      document.getElementById("autoBtn").innerText =
-        "🤖 Auto Miner (" + autoMinerCost + ")";
-
-      document.getElementById("autoCount").innerText =
-        "Auto Miners: " + autoMiner;
-
-      updateUI();
-  }
-
-  function createFloating(e, amount){
-      let float =
-        document.createElement("div");
-
-      float.className = "floating";
-      float.innerText = "+" + amount;
-
-      float.style.left = e.clientX + "px";
-      float.style.top = e.clientY + "px";
-
-      document.body.appendChild(float);
-
-      setTimeout(() => {
-        float.remove();
-      }, 1000);
-  }
-
-  async function saveScore(){
-      await db.collection("leaderboard")
-      .doc(username)
-      .set({
-          username,
-          coins
-      });
-  }
-
-  async function loadLeaderboard(){
-
-      const snapshot =
-        await db.collection("leaderboard")
-        .orderBy("coins","desc")
-        .limit(10)
-        .get();
-
-      let html = "<h3>🏆 Top Players</h3>";
-
-      snapshot.forEach(doc => {
-          const p = doc.data();
-
-          html += `
-            <div>
-              ${p.username} - ${p.coins}
-            </div>
-          `;
-      });
-
-      document.getElementById(
-        "leaderboard"
-      ).innerHTML = html;
-  }
-
-  // Energy Regen
-  setInterval(() => {
-
-      if(energy < maxEnergy){
-          energy++;
-          updateUI();
-      }
-
-  },1000);
-
-  // Auto Miner
-  setInterval(() => {
-
-      if(autoMiner > 0){
-
-          coins += autoMiner;
-
-          updateUI();
-          saveScore();
-      }
-
-  },1000);
-
-  // Refresh Leaderboard
-  setInterval(loadLeaderboard,5000);
-
-  updateUI();
-  loadLeaderboard();
-
-  </script>
-
+setInterval(loadLeaderboard,5000);
+updateUI();
+loadLeaderboard();
+</script>
 </body>
 </html>
