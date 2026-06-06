@@ -9,7 +9,14 @@ energy:100,
 power:1,
 miners:0,
 xpBoost:false
+game.tasks =
+game.tasks || {
 
+task1:false,
+task2:false,
+task3:false
+
+};
 };
 let username =
 localStorage.getItem("username") ||
@@ -308,5 +315,69 @@ update();
 }
 
 },1000);
+function claimTask(id){
 
+if(id === 1){
+
+if(game.coins < 100)
+return alert(
+"Need 100 Stars"
+);
+
+if(game.tasks.task1)
+return;
+
+game.tasks.task1 = true;
+
+game.coins += 50;
+
+alert(
+"Task Completed! +50"
+);
+
+}
+
+if(id === 2){
+
+if(game.miners < 1)
+return alert(
+"Buy a Miner First"
+);
+
+if(game.tasks.task2)
+return;
+
+game.tasks.task2 = true;
+
+game.coins += 150;
+
+alert(
+"Task Completed! +150"
+);
+
+}
+
+if(id === 3){
+
+if(game.level < 5)
+return alert(
+"Reach Level 5"
+);
+
+if(game.tasks.task3)
+return;
+
+game.tasks.task3 = true;
+
+game.coins += 500;
+
+alert(
+"Task Completed! +500"
+);
+
+}
+
+update();
+
+}
 update();
