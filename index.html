@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ZeroStars</title>
+
+  <style>
+    body{
+      background:#0f0f0f;
+      color:white;
+      text-align:center;
+      font-family:sans-serif;
+      padding-top:100px;
+    }
+
+    button{
+      padding:20px 40px;
+      border:none;
+      border-radius:20px;
+      font-size:20px;
+      background:#ffd700;
+    }
+
+    #coins{
+      font-size:50px;
+      margin:30px;
+    }
+  </style>
+
+</head>
+<body>
+
+<h1>⭐ ZeroStars</h1>
+
+<div id="coins">0</div>
+
+<button onclick="mine()">
+TAP TO MINE
+</button>
+
+<script>
+let coins = 0;
+
+function mine(){
+  coins++;
+  document.getElementById("coins").innerText = coins;
+}
+</script>
+
+</body>
+</html>
