@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZeroStars Pro</title>
+<style>
+body{margin:0;background:#08122f;color:#fff;font-family:Arial;text-align:center}
+.wrap{max-width:700px;margin:auto;padding:20px}
+.card{background:#101b40;border-radius:20px;padding:15px;margin:15px 0}
+.star{font-size:140px;cursor:pointer}
+button{padding:12px 18px;border:none;border-radius:12px;margin:5px;font-size:16px}
+.bar{height:18px;background:#222;border-radius:20px;overflow:hidden}
+.fill{height:100%;background:#4caf50;width:100%}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>⭐ ZeroStars Pro</h1>
+
+<div class="card">
+<h2 id="coins">0</h2>
+<div>Level: <span id="level">1</span></div>
+<div>XP: <span id="xp">0</span></div>
+</div>
+
+<div class="bar"><div id="energyFill" class="fill"></div></div>
+<p id="energyText">100 / 100</p>
+
+<div class="star" onclick="mine()">⭐</div>
+
+<button onclick="upgrade()">⛏ Upgrade</button>
+<button onclick="buyMiner()">🤖 Auto Miner</button>
+<button onclick="dailyReward()">🎁 Daily Reward</button>
+
+<div class="card">
+<div id="minerText">Auto Miners: 0</div>
+</div>
+
+<div class="card">
+<h2>🏆 Leaderboard</h2>
+<div id="leaderboard">Loading...</div>
+</div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBfOoEJ0BxhhjkXdL4ae-z5dSrflRG6GQc",
+  authDomain: "zerostars-97e21.firebaseapp.com",
+  projectId: "zerostars-97e21",
+  storageBucket: "zerostars-97e21.firebasestorage.app",
+  messagingSenderId: "617216289630",
+  appId: "1:617216289630:web:d5d44b81af4ed85e113dcf",
+  measurementId: "G-VYWB3L69PK"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let username = localStorage.getItem("zs_name") || prompt("Username?") || "Player";
+localStorage.setItem("zs_name", username);
+
+let coins=0, level=1, xp=0, energy=100, maxEnergy=100, miner=0, upgradeCost=50, minerCost=100;
+
+async function save(){
+ await setDoc(doc(db,"players",username),{
+  username,coins,level,xp,miner,updated:Date.now()
+ });
+}
+
+async function load(){
+ const snap = await getDoc(doc(db,"players",username));
+ if(snap.exists()){
+   const d=snap.data();
+   coins=d.coins||0; level=d.level||1; xp=d.xp||0; miner=d.miner||0;
+ }
+ update();
+}
+window.mine=function(){
+ if(energy<=0)return;
+ coins++;
+ xp++;
+ energy--;
+ if(xp>=level*100){xp=0;level++;}
+ update(); save();
+}
+window.upgrade=function(){
+ if(coins<upgradeCost)return;
+ coins-=upgradeCost;
+ level++;
+ update(); save();
+}
+window.buyMiner=function(){
+ if(coins<minerCost)return;
+ coins-=minerCost;
+ miner++;
+ minerCost=Math.floor(minerCost*1.8);
+ update(); save();
+}
+window.dailyReward=function(){
+ const last=localStorage.getItem("daily");
+ const today=new Date().toDateString();
+ if(last===today){alert("Reward already claimed");return;}
+ coins+=500;
+ localStorage.setItem("daily",today);
+ update(); save();
+}
+function update(){
+ coinsEl.textContent=coins;
+ levelEl.textContent=level;
+ xpEl.textContent=xp;
+ energyText.textContent=energy+" / "+maxEnergy;
+ energyFill.style.width=(energy/maxEnergy*100)+"%";
+ minerText.textContent="Auto Miners: "+miner;
+}
+async function board(){
+ const q=await getDocs(collection(db,"players"));
+ let arr=[];
+ q.forEach(d=>arr.push(d.data()));
+ arr.sort((a,b)=>(b.coins||0)-(a.coins||0));
+ leaderboard.innerHTML=arr.slice(0,10).map((p,i)=>`${i+1}. ${p.username} - ${p.coins}`).join("<br>");
+}
+setInterval(()=>{if(energy<100){energy++;update();}},1000);
+setInterval(()=>{if(miner>0){coins+=miner;update();save();}},1000);
+setInterval(board,5000);
+load().then(board);
+</script>
+</body>
+</html>
