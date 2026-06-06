@@ -229,7 +229,74 @@ function createFloating(e, amount){
   let percent = (energy/maxEnergy)*100;
 
   document.getElementById("energyFill").style.width = percent + "%";
+<script type="module">
 
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  collection
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "کلید apiKey خودت",
+  authDomain: "مقدار authDomain خودت",
+  projectId: "zerostars-97e21",
+  storageBucket: "مقدار storageBucket",
+  messagingSenderId: "617216289630",
+  appId: "مقدار appId"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+window.getDocs = getDocs;
+window.collection = collection;
+
+</script>
+  <body/>
+
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  collection
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "کلید apiKey خودت",
+  authDomain: "مقدار authDomain خودت",
+  projectId: "zerostars-97e21",
+  storageBucket: "مقدار storageBucket",
+  messagingSenderId: "617216289630",
+  appId: "مقدار appId"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db;
+window.setDoc = setDoc;
+window.doc = doc;
+window.getDocs = getDocs;
+window.collection = collection;
+
+</script>
   document.getElementById("energyText").innerText =
   energy + " / " + maxEnergy + " Energy";
 
@@ -273,8 +340,24 @@ function createFloating(e){
 }
 
 </script>
-
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 </body>
-<button id="upgradeBtn" onclick="upgradePickaxe()">
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBfOoEJ0BxhhjkXdL4ae-z5dSrflRG6GQc",
+  authDomain: "zerostars-97e21.firebaseapp.com",
+  projectId: "zerostars-97e21",
+  storageBucket: "zerostars-97e21.firebasestorage.app",
+  messagingSenderId: "617216289630",
+  appId: "1:617216289630:web:d5d44b81af4ed85e113dcf",
+  measurementId: "G-VYWB3L69PK"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+</script>
+  <button id="upgradeBtn" onclick="upgradePickaxe()">
 ⛏ Upgrade (50)
 </button>
