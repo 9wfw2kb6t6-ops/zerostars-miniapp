@@ -186,9 +186,31 @@ function mine(e){
 
   updateEnergy();
 function upgradePickaxe(){
+function buyAutoMiner(){
 
+    if(coins < autoMinerCost) return;
+
+    coins -= autoMinerCost;
+    autoMiner++;
+
+    autoMinerCost = Math.floor(autoMinerCost * 1.8);
+
+    document.getElementById("coins").innerText = coins;
+
+    document.getElementById("autoBtn").innerText =
+        "🤖 Auto Miner (" + autoMinerCost + ")";
+
+    document.getElementById("autoCount").innerText =
+        "Auto Miners: " + autoMiner;
+}
     if(coins < upgradeCost) return;
+<button id="autoBtn" onclick="buyAutoMiner()">
+🤖 Auto Miner (100)
+</button>
 
+<div id="autoCount">
+Auto Miners: 0
+</div>
     coins -= upgradeCost;
     clickPower++;
 
@@ -214,7 +236,16 @@ function createFloating(e, amount){
 }
 
 setInterval(()=>{
+setInterval(()=>{
 
+    if(autoMiner > 0){
+
+        coins += autoMiner;
+
+        document.getElementById("coins").innerText = coins;
+    }
+
+},1000);
   if(energy < maxEnergy){
     energy++;
     updateEnergy();
