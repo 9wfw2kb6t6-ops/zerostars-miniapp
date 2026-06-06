@@ -1,0 +1,10 @@
+{
+  "name":"zerostars-miniapp",
+  "private":true,
+  "dependencies":{
+    "react":"^18",
+    "react-dom":"^18",
+    "@telegram-apps/sdk":"latest",
+    "react-router-dom":"latest"
+  }
+}
