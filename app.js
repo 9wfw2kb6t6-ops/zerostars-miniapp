@@ -11,6 +11,14 @@ miners:0,
 xpBoost:false
 
 };
+let username =
+localStorage.getItem("username") ||
+prompt("Enter Username");
+
+localStorage.setItem(
+"username",
+username
+);
 
 const coinsEl =
 document.getElementById("coins");
