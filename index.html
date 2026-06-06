@@ -1,37 +1,64 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ZeroStars v3</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>ZeroStars V4 Pro</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
 <div class="container">
 
-<h1>⭐ ZeroStars v3</h1>
+<div class="top-card">
+
+<h1>⭐ ZeroStars</h1>
+
+<div class="stats">
+
+<div class="stat">
+<p>💰 Stars</p>
+<h2 id="coins">0</h2>
+</div>
+
+<div class="stat">
+<p>🏆 Level</p>
+<h2 id="level">1</h2>
+</div>
+
+</div>
+
+</div>
 
 <div class="panel">
 
-<h2 id="coins">0</h2>
-
-<p>
-Level:
-<span id="level">1</span>
-</p>
-
-<p>
-XP:
-<span id="xp">0</span>
-</p>
+<p>XP</p>
 
 <div class="bar">
+<div id="xpFill"></div>
+</div>
+
+<p id="xpText">
+0 / 100
+</p>
+
+</div>
+
+<div class="panel">
+
+<p>⚡ Energy</p>
+
+<div class="bar energy-bar">
 <div id="energyFill"></div>
 </div>
 
 <p id="energyText">
-100 / 100 Energy
+100 / 100
 </p>
 
 </div>
@@ -43,11 +70,11 @@ XP:
 <div class="panel">
 
 <button id="upgradeBtn">
-⛏ Upgrade
+⛏ Upgrade Power
 </button>
 
 <button id="minerBtn">
-🤖 Auto Miner
+🤖 Buy Miner
 </button>
 
 <button id="dailyBtn">
@@ -58,6 +85,8 @@ XP:
 
 <div class="panel">
 
+<h3>Player Stats</h3>
+
 <p>
 Power:
 <span id="power">1</span>
@@ -67,6 +96,16 @@ Power:
 Miners:
 <span id="miners">0</span>
 </p>
+
+</div>
+
+<div class="panel">
+
+<h3>🏪 Shop</h3>
+
+<button id="boostBtn">
+🚀 XP Boost (500)
+</button>
 
 </div>
 
