@@ -1,10 +1,12 @@
 {
-  "name":"zerostars-miniapp",
-  "private":true,
-  "dependencies":{
-    "react":"^18",
-    "react-dom":"^18",
-    "@telegram-apps/sdk":"latest",
-    "react-router-dom":"latest"
-  }
+"name": "zerostars",
+"version": "1.0.0",
+"main": "server.js",
+"scripts": {
+"start": "node bot.js & node server.js"
+},
+"dependencies": {
+"express": "^4.19.2",
+"telegraf": "^4.16.3"
+}
 }
