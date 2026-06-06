@@ -1,49 +1,233 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>ZeroStars</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <style>
-    body{
-      background:#0f0f0f;
-      color:white;
-      text-align:center;
-      font-family:sans-serif;
-      padding-top:100px;
-    }
+<title>ZeroStars</title>
 
-    button{
-      padding:20px 40px;
-      border:none;
-      border-radius:20px;
-      font-size:20px;
-      background:#ffd700;
-    }
+<style>
 
-    #coins{
-      font-size:50px;
-      margin:30px;
-    }
-  </style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
 
+body{
+  background:linear-gradient(180deg,#050510,#111827);
+  color:white;
+  font-family:sans-serif;
+  overflow:hidden;
+}
+
+.app{
+  padding:20px;
+  text-align:center;
+}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:bold;
+}
+
+.level{
+  background:#1f2937;
+  padding:10px 16px;
+  border-radius:20px;
+}
+
+.balance{
+  margin-top:20px;
+}
+
+.balance h1{
+  font-size:60px;
+}
+
+.energy-box{
+  width:100%;
+  height:18px;
+  background:#1f2937;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:20px;
+}
+
+.energy-fill{
+  height:100%;
+  width:100%;
+  background:linear-gradient(90deg,#00ff88,#00c2ff);
+  transition:.3s;
+}
+
+.tap-area{
+  margin-top:60px;
+}
+
+.coin{
+  width:220px;
+  height:220px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#ffd700,#ff9900);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:auto;
+  font-size:90px;
+  cursor:pointer;
+  transition:.1s;
+  box-shadow:0 0 40px rgba(255,215,0,.5);
+}
+
+.coin:active{
+  transform:scale(.92);
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#0b1220;
+  display:flex;
+  justify-content:space-around;
+  padding:18px;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+
+.menu-btn{
+  color:#aaa;
+  font-size:14px;
+}
+
+.floating{
+  position:absolute;
+  color:#fff;
+  font-weight:bold;
+  animation:floatUp 1s linear forwards;
+}
+
+@keyframes floatUp{
+  0%{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  100%{
+    opacity:0;
+    transform:translateY(-80px);
+  }
+}
+
+</style>
 </head>
 <body>
 
-<h1>⭐ ZeroStars</h1>
+<div class="app">
 
-<div id="coins">0</div>
+<div class="topbar">
+<div class="logo">⭐ ZeroStars</div>
 
-<button onclick="mine()">
-TAP TO MINE
-</button>
+<div class="level">
+LVL 1
+</div>
+</div>
+
+<div class="balance">
+<p>Total Stars</p>
+<h1 id="coins">0</h1>
+</div>
+
+<div class="energy-box">
+<div class="energy-fill" id="energyFill"></div>
+</div>
+
+<p id="energyText">100 / 100 Energy</p>
+
+<div class="tap-area">
+
+<div class="coin" onclick="mine(event)">
+⭐
+</div>
+
+</div>
+
+</div>
+
+<div class="bottom">
+<div class="menu-btn">🏠 Home</div>
+<div class="menu-btn">👥 Friends</div>
+<div class="menu-btn">🏆 Rank</div>
+<div class="menu-btn">⚙️ Earn</div>
+</div>
 
 <script>
-let coins = 0;
 
-function mine(){
+let coins = 0;
+let energy = 100;
+let maxEnergy = 100;
+
+function mine(e){
+
+  if(energy <= 0) return;
+
   coins++;
+  energy--;
+
   document.getElementById("coins").innerText = coins;
+
+  updateEnergy();
+
+  createFloating(e);
+
 }
+
+function updateEnergy(){
+
+  let percent = (energy/maxEnergy)*100;
+
+  document.getElementById("energyFill").style.width = percent + "%";
+
+  document.getElementById("energyText").innerText =
+  energy + " / " + maxEnergy + " Energy";
+
+}
+
+setInterval(()=>{
+
+  if(energy < maxEnergy){
+    energy++;
+    updateEnergy();
+  }
+
+},1000);
+
+function createFloating(e){
+
+  let float = document.createElement("div");
+
+  float.className = "floating";
+
+  float.innerText = "+1";
+
+  float.style.left = e.clientX + "px";
+  float.style.top = e.clientY + "px";
+
+  document.body.appendChild(float);
+
+  setTimeout(()=>{
+    float.remove();
+  },1000);
+
+}
+
 </script>
 
 </body>
