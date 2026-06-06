@@ -170,26 +170,39 @@ LVL 1
 
 <script>
 
-let coins = 0;
+let coins = 
 let energy = 100;
 let maxEnergy = 100;
-
+let clickPower = 1;
+let upgradeCost = 50;
 function mine(e){
 
   if(energy <= 0) return;
 
-  coins++;
+  coins += clickPower;
   energy--;
 
   document.getElementById("coins").innerText = coins;
 
   updateEnergy();
+function upgradePickaxe(){
 
-  createFloating(e);
+    if(coins < upgradeCost) return;
+
+    coins -= upgradeCost;
+    clickPower++;
+
+    upgradeCost = Math.floor(upgradeCost * 1.5);
+
+    document.getElementById("coins").innerText = coins;
+    document.getElementById("upgradeBtn").innerText =
+        "⛏ Upgrade (" + upgradeCost + ")";
+}
+  createFloating(e, clickPower);
 
 }
 
-function updateEnergy(){
+function createFloating(e, amount){
 
   let percent = (energy/maxEnergy)*100;
 
@@ -215,7 +228,7 @@ function createFloating(e){
 
   float.className = "floating";
 
-  float.innerText = "+1";
+  float.innerText = "+" + amount;
 
   float.style.left = e.clientX + "px";
   float.style.top = e.clientY + "px";
@@ -231,4 +244,6 @@ function createFloating(e){
 </script>
 
 </body>
-</html>
+<button id="upgradeBtn" onclick="upgradePickaxe()">
+⛏ Upgrade (50)
+</button>
