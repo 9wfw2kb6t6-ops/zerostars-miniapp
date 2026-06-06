@@ -272,13 +272,17 @@ setInterval(()=>{
 
 if(game.energy < 100){
 
-game.energy++;
+game.energy += 5;
+
+if(game.energy > 100){
+game.energy = 100;
+}
 
 update();
 
 }
 
-},30000);
+},3000);
 
 setInterval(()=>{
 
