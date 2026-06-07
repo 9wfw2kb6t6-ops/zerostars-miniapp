@@ -425,3 +425,86 @@ img{
     opacity:.7;
     margin-top:10px;
 }
+/* ==========================
+   ZERO STARS TAP SECTION
+========================== */
+
+.tap-section{
+    text-align:center;
+    margin:25px 0;
+}
+
+.star{
+    width:180px;
+    height:180px;
+
+    margin:0 auto;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border-radius:50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,215,0,.18),
+            rgba(255,215,0,.05),
+            transparent 70%
+        );
+
+    cursor:pointer;
+}
+
+.main-logo{
+
+    width:130px;
+    height:130px;
+
+    object-fit:cover;
+
+    border-radius:50%;
+
+    border:3px solid rgba(255,215,0,.35);
+
+    background:#000;
+
+    box-shadow:
+        0 0 15px rgba(255,215,0,.45),
+        0 0 35px rgba(255,215,0,.18);
+
+    transition:.15s ease;
+}
+
+.star:active .main-logo{
+    transform:scale(.92);
+}
+
+.tap-text{
+    margin-top:12px;
+
+    color:#facc15;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    letter-spacing:2px;
+}
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+    .star{
+        width:160px;
+        height:160px;
+    }
+
+    .main-logo{
+        width:115px;
+        height:115px;
+    }
+
+}
