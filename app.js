@@ -46,18 +46,21 @@ async function loadCloudSave(){
     const snap = await getDoc(doc(db,"players",username));
     if(snap.exists()){
       const data = snap.data();
-      // نگهداری بالاترین مقدار از localStorage و cloud
-      game.coins = Math.max(game.coins, data.coins || 0);
-      game.level = Math.max(game.level, data.level || 1);
-      game.power = Math.max(game.power, data.power || 1);
-      game.miners = Math.max(game.miners, data.miners || 0);
-      game.xp = Math.max(game.xp, data.xp || 0);
-      game.energy = Math.max(game.energy, data.energy || 100);
-      game.referrals = Math.max(game.referrals, data.referrals || 0);
-      game.tasks = {...game.tasks, ...data.tasks};
-      game.dailyMissions = {...game.dailyMissions, ...data.dailyMissions};
-      game.achievements = {...game.achievements, ...data.achievements};
-      game.referredBy = game.referredBy || data.referredBy || null;
+      game = {
+        ...game,
+        ...data,
+        coins: Math.max(game.coins, data.coins || 0),
+        level: Math.max(game.level, data.level || 1),
+        power: Math.max(game.power, data.power || 1),
+        miners: Math.max(game.miners, data.miners || 0),
+        xp: Math.max(game.xp, data.xp || 0),
+        energy: Math.max(game.energy, data.energy || 0),
+        referrals: Math.max(game.referrals, data.referrals || 0),
+        tasks: {...game.tasks, ...data.tasks},
+        dailyMissions: {...game.dailyMissions, ...data.dailyMissions},
+        achievements: {...game.achievements, ...data.achievements},
+        referredBy: game.referredBy || data.referredBy || null
+      };
     }
   } catch(err){ console.error(err); }
   finally { update(); }
@@ -90,8 +93,9 @@ function update(){
   const maxXp=game.level*100;
   xpText.textContent=`${game.xp} / ${maxXp}`;
   xpFill.style.width=Math.min((game.xp/maxXp*100),100)+"%";
-  energyText.textContent=`${game.energy} / 100`;
-  energyFill.style.width=game.energy+"%";
+  
+  energyText.textContent = game.energy; // نمایش انرژی واقعی
+  energyFill.style.width = Math.min((game.energy/500)*100,100)+"%"; // مقیاس نوار انرژی
 
   if(refCountEl) refCountEl.textContent = `Referrals: ${game.referrals || 0}`;
 
@@ -135,7 +139,7 @@ const btnMap=[
   ["minerBtn",()=>{const cost=(game.miners+1)*100;if(game.coins<cost)return alert("Not enough Stars");game.coins-=cost;game.miners++;update();}],
   ["dailyBtn",()=>{const today=new Date().toDateString();if(localStorage.getItem("zs_daily")===today)return alert("Already Claimed");localStorage.setItem("zs_daily",today);game.coins+=500;game.dailyMissions.dailyReward=true;update();}],
   ["boostBtn",()=>{if(game.coins<500)return alert("Need 500 Stars");game.coins-=500;game.xpBoost=true;update();}],
-  ["energyBoostBtn",()=>{if(game.coins<300)return alert("Need 300 Stars");game.coins-=300;game.energy=100;update();}],
+  ["energyBoostBtn",()=>{if(game.coins<300)return alert("Need 300 Stars"); game.coins-=300; game.energy+=100; update();}],
   ["doubleCoinsBtn",()=>{if(game.coins<1000)return alert("Need 1000 Stars");game.coins-=1000;game.doubleCoins=true;update();}]
 ];
 btnMap.forEach(([id,fn])=>{
@@ -255,7 +259,7 @@ async function updateLeaderboard(){
     update();
     updateLeaderboard();
     setInterval(updateLeaderboard,5000);
-  } catch(err){
+  } catch(err) {
     console.error(err);
     update();
     updateLeaderboard();
