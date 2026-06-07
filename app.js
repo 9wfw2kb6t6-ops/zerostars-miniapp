@@ -54,21 +54,80 @@ const walletAddr=document.getElementById("walletAddress");
 
 // Update
 function update(){
-  coinsEl.textContent=game.coins;
-  levelEl.textContent=game.level;
-  powerEl.textContent=game.power;
-  minersEl.textContent=game.miners;
-  const maxXp=game.level*100;
-  xpText.textContent=`${game.xp} / ${maxXp}`;
+
+  if(coinsEl) coinsEl.textContent = game.coins;
+  if(levelEl) levelEl.textContent = game.level;
+  if(powerEl) powerEl.textContent = game.power;
+  if(minersEl) minersEl.textContent = game.miners;
+
+  const maxXp = game.level * 100;
+
+  if(xpText){
+    xpText.textContent = `${game.xp} / ${maxXp}`;
+  }
+
   let xpPercent = (game.xp / maxXp) * 100;
 
-if(xpPercent > 100){
-   xpPercent = 100;
-}
+  if(xpPercent > 100){
+    xpPercent = 100;
+  }
 
-xpFill.style.width = xpPercent + "%";
-  energyText.textContent=`${game.energy} / 100`;
-  energyFill.style.width=game.energy+"%";
+  if(xpFill){
+    xpFill.style.width = xpPercent + "%";
+  }
+
+  if(energyText){
+    energyText.textContent = `${game.energy} / 100`;
+  }
+
+  if(energyFill){
+    energyFill.style.width = game.energy + "%";
+  }
+
+  if(
+    game.coins >= 1000 &&
+    !game.achievements.stars1000
+  ){
+    game.achievements.stars1000 = true;
+
+    const ach1 = document.getElementById("ach1");
+    if(ach1){
+      ach1.innerHTML = "✅ Reach 1000 Stars";
+    }
+
+    game.coins += 500;
+  }
+
+  if(
+    game.level >= 10 &&
+    !game.achievements.level10
+  ){
+    game.achievements.level10 = true;
+
+    const ach2 = document.getElementById("ach2");
+    if(ach2){
+      ach2.innerHTML = "✅ Reach Level 10";
+    }
+
+    game.coins += 1000;
+  }
+
+  if(
+    game.miners >= 10 &&
+    !game.achievements.miners10
+  ){
+    game.achievements.miners10 = true;
+
+    const ach3 = document.getElementById("ach3");
+    if(ach3){
+      ach3.innerHTML = "✅ Buy 10 Miners";
+    }
+
+    game.coins += 1500;
+  }
+
+  save();
+}
 
   // Achievements
   if(game.coins>=1000 && !game.achievements.stars1000){game.achievements.stars1000=true; document.getElementById("ach1").innerHTML="✅ Reach 1000 Stars"; game.coins+=500;}
@@ -116,25 +175,50 @@ const btnMap=[
 ];
 btnMap.forEach(([id,fn])=>{
   const el=document.getElementById(id);
-  el.addEventListener("click",fn);
-  el.addEventListener("touchstart",e=>{e.preventDefault();fn();});
-});
 
+  if(!el) return;
+
+  el.addEventListener("click",fn);
+
+  el.addEventListener("touchstart",(e)=>{
+    e.preventDefault();
+    fn();
+  });
+});
 // Auto Energy / Miner
 setInterval(()=>{if(game.energy<100){game.energy+=5;if(game.energy>100)game.energy=100;update();}},3000);
 setInterval(()=>{if(game.miners>0){game.coins+=game.miners;game.xp+=game.miners;update();}},1000);
 
 // Tasks
-function claimTask(id){if(id===1 && !game.tasks.task1 && game.coins>=100){game.tasks.task1=true;game.coins+=50;}
-if(id===2 && !game.tasks.task2 && game.miners>=1){game.tasks.task2=true;game.coins+=150;}
-if(id===3 && !game.tasks.task3 && game.level>=5){game.tasks.task3=true;game.coins+=500;} update();}
+function claimTelegramTask(){
+
+  if(game.tasks.telegram){
+    alert("Already Claimed");
+    return;
+  }
+
+  game.tasks.telegram = true;
+  game.coins += 500;
+
+  update();
+}
 window.claimTask=claimTask;
 
 function claimTelegramTask(){if(!game.tasks.telegram){game.tasks.telegram=true;game.coins+=500;update();}}
 window.claimTelegramTask=claimTelegramTask;
 
-function claimTwitterTask(){if(!game.tasks.twitter){game.tasks.twitter=true;game.coins+=500;update();}}
-window.claimTwitterTask=claimTwitterTask;
+function claimTwitterTask(){
+
+  if(game.tasks.twitter){
+    alert("Already Claimed");
+    return;
+  }
+
+  game.tasks.twitter = true;
+  game.coins += 500;
+
+  update();
+}
 
 function claimDailyMission(id){
   if(id===1 && game.dailyMissions.mine100===true){game.dailyMissions.mine100="claimed";game.coins+=300;}
@@ -156,7 +240,9 @@ async function connectWallet(){
     }catch(err){console.error(err); alert("Connection failed!");}
   }else{ alert("MetaMask not detected!"); }
 }
-walletBtn.addEventListener("click",connectWallet);
+if(walletBtn){
+  walletBtn.addEventListener("click",connectWallet);
+}
 
 // Live Leaderboard
 async function updateLeaderboard(){
