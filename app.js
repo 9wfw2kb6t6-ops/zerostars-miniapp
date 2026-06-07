@@ -185,7 +185,7 @@ function claimDailyMission(id){
   if(id===3 && game.dailyMissions.dailyReward===true){game.dailyMissions.dailyReward="claimed";game.coins+=200;} 
   update();
 }
-function copyReferral(){
+function copyReferral() {
 
   const link =
     window.location.origin +
@@ -193,13 +193,24 @@ function copyReferral(){
     "?ref=" +
     username;
 
-  navigator.clipboard.writeText(link);
+  if (navigator.share) {
 
-  alert("Referral Link Copied:\n" + link);
+    navigator.share({
+      title: "ZeroStars",
+      text: "Join ZeroStars and earn rewards!",
+      url: link
+    });
+
+  } else {
+
+    navigator.clipboard.writeText(link);
+
+    alert("Link copied:\n" + link);
+
+  }
 }
 
 window.copyReferral = copyReferral;
-
 window.claimDailyMission=claimDailyMission;
 
 // Wallet Connect
