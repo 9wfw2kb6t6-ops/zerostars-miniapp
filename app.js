@@ -66,7 +66,6 @@ async function loadCloudSave(){
       };
     }
   } catch(err){ console.error(err); }
-  finally { update(); }
 }
 
 async function saveCloud(){ try{ await setDoc(doc(db,"players",username),game);} catch(err){console.error(err);} }
@@ -86,6 +85,7 @@ const walletBtn=document.getElementById("connectWalletBtn");
 const walletAddr=document.getElementById("walletAddress");
 const refCountEl=document.getElementById("refCount");
 const keyCountEl=document.getElementById("keyCount");
+const leaderboardEl=document.getElementById("leaderboard");
 
 // Update UI
 function update(){
@@ -96,13 +96,10 @@ function update(){
   const maxXp=game.level*100;
   xpText.textContent=`${game.xp} / ${maxXp}`;
   xpFill.style.width=Math.min((game.xp/maxXp*100),100)+"%";
-  
   energyText.textContent = game.energy;
   energyFill.style.width = Math.min((game.energy/500)*100,100)+"%";
-
   if(refCountEl) refCountEl.textContent = `Referrals: ${game.referrals || 0}`;
   if(keyCountEl) keyCountEl.textContent = game.keys || 0;
-
   save();
 }
 
@@ -123,8 +120,6 @@ function mineStar(e){
   if(game.xpBoost) gain*=2;
   if(game.doubleCoins) gain*=2;
   game.coins+=gain; game.xp+=gain; game.energy--;
-  if(game.coins>=100) game.dailyMissions.mine100=true;
-  while(game.xp>=game.level*100){ game.xp-=game.level*100; game.level++; }
   createFloating("+"+gain,e.clientX||window.innerWidth/2,e.clientY||window.innerHeight/2);
   update();
 }
@@ -152,16 +147,13 @@ async function processReferral(){
   const params = new URLSearchParams(window.location.search);
   const ref = params.get("ref");
   if(!ref || ref===username || game.referredBy) return;
-
   try{
     const refDoc = await getDoc(doc(db,"players",ref));
     if(refDoc.exists()){
       let refData = refDoc.data();
       refData.coins = (refData.coins || 0) + 500;
       refData.referrals = (refData.referrals || 0) + 1;
-      if(refData.referrals % 20 === 0){
-        refData.keys = (refData.keys || 0) + 1;
-      }
+      if(refData.referrals % 20 === 0){ refData.keys = (refData.keys || 0) + 1; }
       await setDoc(doc(db,"players",ref), refData);
       game.coins += 250;
       game.referredBy = ref;
@@ -170,17 +162,18 @@ async function processReferral(){
     }
   } catch(err){ console.error(err); }
 }
+window.copyReferral = () => {
+  const link = window.location.origin + window.location.pathname + "?ref=" + username;
+  navigator.clipboard.writeText(link);
+  alert("Referral link copied!");
+};
 
 // Open Box
 function openRewardBox(){
-  if(!game.keys || game.keys < 1){
-    alert("You need at least 1 Key to open this box!");
-    return;
-  }
-  game.keys -= 1;
-  game.boxesOpened += 1;
+  if(game.keys < 1){ alert("Need 1 key to open the box"); return; }
+  game.keys--; game.boxesOpened++;
   const rewards = [0.001,0.002,0.003,0.005,0.01];
-  const reward = rewards[Math.floor(Math.random() * rewards.length)];
+  const reward = rewards[Math.floor(Math.random()*rewards.length)];
   alert(`🎁 Congratulations! You won ${reward} SOL!`);
   update();
 }
@@ -199,101 +192,48 @@ async function connectWallet(){
 }
 if(walletBtn) { walletBtn.addEventListener("click", connectWallet); }
 
+// Auto Energy
+setInterval(() => {
+  if(game.energy < 500){ game.energy+=5; if(game.energy>500) game.energy=500; update(); }
+},3000);
+
+// Auto Miner
+setInterval(() => {
+  if(game.miners>0){
+    game.coins+=game.miners;
+    game.xp+=game.miners;
+    while(game.xp >= game.level*100){ game.xp-=game.level*100; game.level++; }
+    update();
+  }
+},1000);
+
+// Leaderboard
+async function updateLeaderboard(){
+  if(!leaderboardEl) return;
+  try{
+    const snap = await getDocs(collection(db,"players"));
+    let players = [];
+    snap.forEach(docSnap => {
+      const data = docSnap.data();
+      players.push({username:docSnap.id, coins:data.coins||0, level:data.level||1});
+    });
+    players.sort((a,b)=>b.coins-a.coins);
+    leaderboardEl.innerHTML="<h3>🏆 Top Players</h3>";
+    players.slice(0,10).forEach((p,i)=>{
+      const div=document.createElement("div");
+      div.textContent=`#${i+1} ${p.username} - ${p.coins} ⭐ | Lv.${p.level}`;
+      leaderboardEl.appendChild(div);
+    });
+  } catch(err){ console.error(err);}
+}
+
 // Init
-(async () => {
-  try {
+(async ()=>{
+  try{
     await loadCloudSave();
     await processReferral();
     update();
-  } catch(err){ console.error(err); update(); }
+    updateLeaderboard();
+  } catch(err){ console.error(err);}
 })();
-// Auto Energy
-
-setInterval(() => {
-  if(game.energy < 500){
-    game.energy += 5;
-
-    if(game.energy > 500){
-      game.energy = 500;
-    }
-
-    update();
-  }
-},3000);
-
-
-// Auto Miner
-
-setInterval(() => {
-
-  if(game.miners > 0){
-
-    game.coins += game.miners;
-    game.xp += game.miners;
-
-    while(game.xp >= game.level * 100){
-      game.xp -= game.level * 100;
-      game.level++;
-    }
-
-    update();
-  }
-
-},1000);
-
-
-// Leaderboard
-
-async function updateLeaderboard(){
-
-  const board = document.getElementById("leaderboard");
-
-  if(!board) return;
-
-  try{
-
-    const snap = await getDocs(collection(db,"players"));
-
-    let players = [];
-
-    snap.forEach(docSnap => {
-
-      const data = docSnap.data();
-
-      players.push({
-        username: docSnap.id,
-        coins: data.coins || 0,
-        level: data.level || 1
-      });
-
-    });
-
-    players.sort((a,b)=>b.coins-a.coins);
-
-    board.innerHTML = "<h3>🏆 Top Players</h3>";
-
-    players.slice(0,10).forEach((p,i)=>{
-
-      const div = document.createElement("div");
-
-      div.textContent =
-        `#${i+1} ${p.username} - ${p.coins} ⭐ | Lv.${p.level}`;
-
-      board.appendChild(div);
-
-    });
-
-  }catch(err){
-
-    console.error(err);
-
-  }
-
-}
-
-
-// Start Leaderboard
-
-updateLeaderboard();
-
 setInterval(updateLeaderboard,5000);
