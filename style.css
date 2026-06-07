@@ -35,3 +35,38 @@ transform:scale(1);
 }
 
 }
+
+.star{
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+margin:20px auto;
+
+cursor:pointer;
+
+user-select:none;
+
+}
+
+.logo-img{
+
+width:220px;
+height:220px;
+
+object-fit:contain;
+
+filter:drop-shadow(0 0 25px gold);
+
+pointer-events:none;
+
+transition:.15s;
+
+}
+
+.star:active .logo-img{
+
+transform:scale(.95);
+
+}
