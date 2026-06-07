@@ -95,7 +95,10 @@ function mineStar(e){
   if(game.doubleCoins) gain*=2;
   game.coins+=gain; game.xp+=gain; game.energy--;
   if(game.coins>=100) game.dailyMissions.mine100=true;
-  if(game.xp>=game.level*100){game.xp-=game.level*100; game.level++; }
+  while(game.xp >= game.level * 100){
+    game.xp -= game.level * 100;
+    game.level++;
+}
   createFloating("+"+gain,e.clientX||window.innerWidth/2,e.clientY||window.innerHeight/2);
   update();
 }
