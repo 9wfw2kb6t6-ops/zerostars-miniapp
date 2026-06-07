@@ -1,248 +1,111 @@
 <!DOCTYPE html>
-
 <html lang="fa" dir="rtl">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <title>ZeroStars V4 Pro</title>
-
 <link rel="stylesheet" href="style.css">
-
 </head>
-
 <body>
 
 <div class="container">
 
-<div class="top-card">
+  <!-- بخش بالایی با نام بازی و Stats -->
+  <div class="top-card">
+    <h1>ZeroStars</h1>
+    <div class="stats">
+      <div class="stat">
+        <p>💰 Stars</p>
+        <h2 id="coins">0</h2>
+      </div>
+      <div class="stat">
+        <p>🏆 Level</p>
+        <h2 id="level">1</h2>
+      </div>
+    </div>
+  </div>
 
-<h1>⭐ ZeroStars</h1>
+  <!-- XP Bar -->
+  <div class="panel">
+    <p>XP</p>
+    <div class="bar"><div id="xpFill"></div></div>
+    <p id="xpText">0 / 100</p>
+  </div>
 
-<div class="stats">
+  <!-- Energy Bar -->
+  <div class="panel">
+    <p>⚡ Energy</p>
+    <div class="bar energy-bar"><div id="energyFill"></div></div>
+    <p id="energyText">100 / 100</p>
+  </div>
 
-<div class="stat">
-<p>💰 Stars</p>
-<h2 id="coins">0</h2>
-</div>
+  <!-- لوگوی اصلی (جایگزین ستاره) -->
+  <div id="star" class="star">
+    <img src="IMG_1874.jpeg" alt="ZeroStars Logo" style="width:180px; height:180px; object-fit:contain;">
+  </div>
 
-<div class="stat">
-<p>🏆 Level</p>
-<h2 id="level">1</h2>
-</div>
+  <!-- دکمه‌های Shop و Boost -->
+  <div class="panel">
+    <button id="upgradeBtn">⛏ Upgrade Power</button>
+    <button id="minerBtn">🤖 Buy Miner</button>
+    <button id="dailyBtn">🎁 Daily Reward</button>
+    <button id="boostBtn">🚀 XP Boost (500)</button>
+    <button id="energyBoostBtn">⚡ Energy Boost (300)</button>
+    <button id="doubleCoinsBtn">💰 Double Coins (1000)</button>
+  </div>
 
-</div>
+  <!-- Player Stats -->
+  <div class="panel">
+    <h3>Player Stats</h3>
+    <p>Power: <span id="power">1</span></p>
+    <p>Miners: <span id="miners">0</span></p>
+  </div>
 
-</div>
+  <!-- Tasks -->
+  <div class="panel">
+    <h3>📋 Tasks</h3>
+    <div>
+      📢 Join Telegram
+      <a href="https://t.me/zeroStarsuru" target="_blank"><button>Join Telegram</button></a>
+      <button onclick="claimTelegramTask()">Claim +500</button>
+    </div>
+    <br>
+    <div>
+      🐦 Follow X
+      <a href="https://x.com/zerostartsuru?s=11" target="_blank"><button>Follow X</button></a>
+      <button onclick="claimTwitterTask()">Claim +500</button>
+    </div>
+    <br>
+    <div>⭐ Reach 100 Stars <button onclick="claimTask(1)">Claim</button></div>
+    <div>🤖 Buy First Miner <button onclick="claimTask(2)">Claim</button></div>
+    <div>🏆 Reach Level 5 <button onclick="claimTask(3)">Claim</button></div>
+  </div>
 
-<div class="panel">
+  <!-- Daily Missions -->
+  <div class="panel">
+    <h3>🎯 Daily Missions</h3>
+    <p>⭐ Mine 100 Stars <button onclick="claimDailyMission(1)">Claim</button></p>
+    <p>⛏ Buy 1 Upgrade <button onclick="claimDailyMission(2)">Claim</button></p>
+    <p>🎁 Claim Daily Reward <button onclick="claimDailyMission(3)">Claim</button></p>
+  </div>
 
-<p>XP</p>
+  <!-- Achievements -->
+  <div class="panel">
+    <h3>🏅 Achievements</h3>
+    <p id="ach1">🔒 Reach 1000 Stars</p>
+    <p id="ach2">🔒 Reach Level 10</p>
+    <p id="ach3">🔒 Buy 10 Miners</p>
+  </div>
 
-<div class="bar">
-<div id="xpFill"></div>
-</div>
-
-<p id="xpText">
-0 / 100
-</p>
-
-</div>
-
-<div class="panel">
-
-<p>⚡ Energy</p>
-
-<div class="bar energy-bar">
-<div id="energyFill"></div>
-</div>
-
-<p id="energyText">
-100 / 100
-</p>
-
-</div>
-
-<div id="star" class="star">
-  <img src="logo.png" alt="ZeroStars Logo">
-</div>
-
-<div class="panel">
-
-<button id="upgradeBtn">
-⛏ Upgrade Power
-</button>
-
-<button id="minerBtn">
-🤖 Buy Miner
-</button>
-
-<button id="dailyBtn">
-🎁 Daily Reward
-</button>
-
-<button id="boostBtn">
-🚀 XP Boost (500)
-</button>
-
-<button id="energyBoostBtn">
-⚡ Energy Boost (300)
-</button>
-
-<button id="doubleCoinsBtn">
-💰 Double Coins (1000)
-</button>
-
-</div>
-
-<div class="panel">
-
-<h3>Player Stats</h3>
-
-<p>
-Power:
-<span id="power">1</span>
-</p>
-
-<p>
-Miners:
-<span id="miners">0</span>
-</p>
-
-</div>
-
-<div class="panel">
-
-<h3>📋 Tasks</h3>
-
-<div>
-
-📢 Join Telegram
-
-<a href="https://t.me/zeroStarsuru" target="_blank">
-<button>Join Telegram</button>
-</a>
-
-<button onclick="claimTelegramTask()">
-Claim +500
-</button>
+  <!-- Leaderboard -->
+  <div class="panel">
+    <h3>🏆 Leaderboard</h3>
+    <div id="leaderboard">Loading...</div>
+  </div>
 
 </div>
 
-<br>
-
-<div>
-
-🐦 Follow X
-
-<a href="https://x.com/zerostartsuru?s=11" target="_blank">
-<button>Follow X</button>
-</a>
-
-<button onclick="claimTwitterTask()">
-Claim +500
-</button>
-
-</div>
-
-<br>
-
-<div>
-
-⭐ Reach 100 Stars
-
-<button onclick="claimTask(1)">
-Claim
-</button>
-
-</div>
-
-<br>
-
-<div>
-
-🤖 Buy First Miner
-
-<button onclick="claimTask(2)">
-Claim
-</button>
-
-</div>
-
-<br>
-
-<div>
-
-🏆 Reach Level 5
-
-<button onclick="claimTask(3)">
-Claim
-</button>
-
-</div>
-
-</div>
-
-<div class="panel">
-
-<h3>🎯 Daily Missions</h3>
-
-<p>
-⭐ Mine 100 Stars
-<button onclick="claimDailyMission(1)">
-Claim
-</button>
-</p>
-
-<p>
-⛏ Buy 1 Upgrade
-<button onclick="claimDailyMission(2)">
-Claim
-</button>
-</p>
-
-<p>
-🎁 Claim Daily Reward
-<button onclick="claimDailyMission(3)">
-Claim
-</button>
-</p>
-
-</div>
-
-<div class="panel">
-
-<h3>🏅 Achievements</h3>
-
-<p id="ach1">
-🔒 Reach 1000 Stars
-</p>
-
-<p id="ach2">
-🔒 Reach Level 10
-</p>
-
-<p id="ach3">
-🔒 Buy 10 Miners
-</p>
-
-</div>
-
-<div class="panel">
-
-<h3>🏆 Leaderboard</h3>
-
-<div id="leaderboard">
-Loading...
-</div>
-
-</div>
-
-</div>
-
+<!-- اسکریپت بازی -->
 <script type="module" src="app.js"></script>
-
 </body>
-
 </html>
