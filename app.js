@@ -9,6 +9,9 @@ energy:100,
 power:1,
 miners:0,
 xpBoost:false
+
+};
+
 game.tasks =
 game.tasks || {
 
@@ -18,7 +21,7 @@ task3:false,
 
 telegram:false,
 twitter:false
-  
+
 };
 
 let username =
