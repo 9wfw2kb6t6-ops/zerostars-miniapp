@@ -74,17 +74,24 @@ transition:width .3s ease;
 }
 
 .star{
-font-size:180px;
-cursor:pointer;
-user-select:none;
-text-align:center;
-margin:20px 0;
-transition:.1s;
-filter:drop-shadow(0 0 25px gold);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:20px 0;
+  cursor:pointer;
+  user-select:none;
 }
 
-.star:active{
-transform:scale(.9);
+.star img{
+  width:220px;
+  height:220px;
+  object-fit:contain;
+  transition:.1s;
+  filter:drop-shadow(0 0 25px gold);
+}
+
+.star:active img{
+  transform:scale(.9);
 }
 
 button{
