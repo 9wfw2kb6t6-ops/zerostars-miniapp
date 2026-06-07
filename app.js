@@ -248,6 +248,24 @@ async function updateLeaderboard(){
 }
 
 // Init
-loadCloudSave().then(()=>{update();});
-updateLeaderboard();
-setInterval(updateLeaderboard,5000);
+// Init
+(async () => {
+  try {
+    await loadCloudSave();
+    await processReferral();
+
+    update();
+    updateLeaderboard();
+
+    setInterval(updateLeaderboard, 5000);
+
+  } catch(err) {
+    console.error(err);
+
+    // اگر کلود لود نشد، حداقل سیو محلی نمایش داده شود
+    update();
+    updateLeaderboard();
+
+    setInterval(updateLeaderboard, 5000);
+  }
+})();
