@@ -74,6 +74,11 @@ function update(){
   if(game.coins>=1000 && !game.achievements.stars1000){game.achievements.stars1000=true; document.getElementById("ach1").innerHTML="✅ Reach 1000 Stars"; game.coins+=500;}
   if(game.level>=10 && !game.achievements.level10){game.achievements.level10=true; document.getElementById("ach2").innerHTML="✅ Reach Level 10"; game.coins+=1000;}
   if(game.miners>=10 && !game.achievements.miners10){game.achievements.miners10=true; document.getElementById("ach3").innerHTML="✅ Buy 10 Miners"; game.coins+=1500;}
+const refCount = document.getElementById("refCount");
+
+if(refCount){
+  refCount.textContent = `Referrals: ${game.referrals || 0}`;
+}
   save();
 }
 
