@@ -46,29 +46,26 @@ async function loadCloudSave(){
     const snap = await getDoc(doc(db,"players",username));
     if(snap.exists()){
       const data = snap.data();
-      game = {
-        ...game,
-        ...data,
-        coins: Math.max(game.coins, data.coins || 0),
-        level: Math.max(game.level, data.level || 1),
-        power: Math.max(game.power, data.power || 1),
-        miners: Math.max(game.miners, data.miners || 0)
-      };
+      // نگهداری بالاترین مقدار از localStorage و cloud
+      game.coins = Math.max(game.coins, data.coins || 0);
+      game.level = Math.max(game.level, data.level || 1);
+      game.power = Math.max(game.power, data.power || 1);
+      game.miners = Math.max(game.miners, data.miners || 0);
+      game.xp = Math.max(game.xp, data.xp || 0);
+      game.energy = Math.max(game.energy, data.energy || 100);
+      game.referrals = Math.max(game.referrals, data.referrals || 0);
+      game.tasks = {...game.tasks, ...data.tasks};
+      game.dailyMissions = {...game.dailyMissions, ...data.dailyMissions};
+      game.achievements = {...game.achievements, ...data.achievements};
+      game.referredBy = game.referredBy || data.referredBy || null;
     }
-  } catch(err){
-  console.error(err);
-}
-}
-
-async function saveCloud(){ 
-  try{ await setDoc(doc(db,"players",username),game);} 
-  catch(err){console.error(err);} 
+  } catch(err){ console.error(err); }
+  finally { update(); }
 }
 
-function save(){ 
-  localStorage.setItem("zerostars_save",JSON.stringify(game)); 
-  saveCloud(); 
-}
+async function saveCloud(){ try{ await setDoc(doc(db,"players",username),game);} catch(err){console.error(err);} }
+
+function save(){ localStorage.setItem("zerostars_save",JSON.stringify(game)); saveCloud(); }
 
 // DOM Elements
 const coinsEl=document.getElementById("coins");
@@ -143,8 +140,10 @@ const btnMap=[
 ];
 btnMap.forEach(([id,fn])=>{
   const el=document.getElementById(id);
-  el.addEventListener("click",fn);
-  el.addEventListener("touchstart",e=>{e.preventDefault();fn();});
+  if(el){
+    el.addEventListener("click",fn);
+    el.addEventListener("touchstart",e=>{e.preventDefault();fn();});
+  }
 });
 
 // Auto Energy / Miner
@@ -249,24 +248,17 @@ async function updateLeaderboard(){
 }
 
 // Init
-// Init
 (async () => {
   try {
     await loadCloudSave();
     await processReferral();
-
     update();
     updateLeaderboard();
-
-    setInterval(updateLeaderboard, 5000);
-
-  } catch(err) {
+    setInterval(updateLeaderboard,5000);
+  } catch(err){
     console.error(err);
-
-    // اگر کلود لود نشد، حداقل سیو محلی نمایش داده شود
     update();
     updateLeaderboard();
-
-    setInterval(updateLeaderboard, 5000);
+    setInterval(updateLeaderboard,5000);
   }
 })();
