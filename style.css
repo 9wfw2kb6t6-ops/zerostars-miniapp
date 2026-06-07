@@ -274,3 +274,23 @@ button:hover{
     flex-direction:column;
   }
 }
+img{
+  max-width:100%;
+  height:auto;
+}
+
+.logo-img{
+  width:160px !important;
+  height:160px !important;
+  max-width:160px !important;
+  max-height:160px !important;
+  object-fit:cover !important;
+  border-radius:24px;
+  display:block;
+  margin:0 auto;
+}
+
+.top-card .logo-img{
+  width:160px !important;
+  height:160px !important;
+}
