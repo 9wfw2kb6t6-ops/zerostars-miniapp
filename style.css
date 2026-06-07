@@ -232,3 +232,34 @@ button:active{
 
 }
 
+html,
+body{
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+}
+
+body{
+  padding-bottom:120px;
+}
+
+.container{
+  width:100%;
+  max-width:700px;
+  margin:auto;
+  padding:16px;
+}
+
+/* Telegram WebApp Fix */
+.telegram-app{
+  min-height:100vh;
+}
+
+/* Better mobile scrolling */
+*{
+  -webkit-tap-highlight-color: transparent;
+}
+
+.panel{
+  overflow:hidden;
+}
