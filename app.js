@@ -1,9 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, getDocs, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ==============================
 // Firebase Config
-// ==============================
 const firebaseConfig = {
   apiKey: "AIzaSyBfOoEJ0BxhhjkXdL4ae-z5dSrflRG6GQc",
   authDomain: "zerostars-97e21.firebaseapp.com",
@@ -17,9 +15,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ==============================
 // Game State
-// ==============================
 let game = JSON.parse(localStorage.getItem("zerostars_save")) || {
   coins:0, level:1, xp:0, energy:100, power:1, miners:0,
   xpBoost:false, doubleCoins:false,
@@ -31,9 +27,7 @@ let game = JSON.parse(localStorage.getItem("zerostars_save")) || {
 let username = localStorage.getItem("username");
 if(!username){ username = prompt("Enter Username"); localStorage.setItem("username", username); }
 
-// ==============================
 // Cloud Save
-// ==============================
 async function loadCloudSave(){
   try{
     const snap = await getDoc(doc(db, "players", username));
@@ -45,9 +39,7 @@ async function saveCloud(){ try{ await setDoc(doc(db, "players", username), game
 
 function save(){ localStorage.setItem("zerostars_save", JSON.stringify(game)); saveCloud(); }
 
-// ==============================
 // DOM Elements
-// ==============================
 const coinsEl = document.getElementById("coins");
 const levelEl = document.getElementById("level");
 const xpText = document.getElementById("xpText");
@@ -58,9 +50,7 @@ const powerEl = document.getElementById("power");
 const minersEl = document.getElementById("miners");
 const starEl = document.getElementById("star");
 
-// ==============================
 // Update Function
-// ==============================
 function update(){
   coinsEl.textContent = game.coins;
   levelEl.textContent = game.level;
@@ -82,9 +72,7 @@ function update(){
   save();
 }
 
-// ==============================
 // Floating Text
-// ==============================
 function createFloating(text,x,y){
   const div=document.createElement("div");
   div.className="floating";
@@ -95,9 +83,7 @@ function createFloating(text,x,y){
   setTimeout(()=>div.remove(),1000);
 }
 
-// ==============================
 // Click / Touch on Star
-// ==============================
 function handleStarClick(e){
   e.preventDefault();
   if(game.energy<=0) return;
@@ -119,9 +105,7 @@ function handleStarClick(e){
 starEl.addEventListener("click", handleStarClick);
 starEl.addEventListener("touchstart", handleStarClick);
 
-// ==============================
 // Buttons
-// ==============================
 const btnMap = [
   ["upgradeBtn",()=>{const cost=game.power*50;if(game.coins<cost)return alert("Not enough Stars");game.coins-=cost;game.power++;game.dailyMissions.upgrade1=true;update();}],
   ["minerBtn",()=>{const cost=(game.miners+1)*100;if(game.coins<cost)return alert("Not enough Stars");game.coins-=cost;game.miners++;update();}],
@@ -130,27 +114,17 @@ const btnMap = [
   ["energyBoostBtn",()=>{if(game.coins<300)return alert("Need 300 Stars");game.coins-=300;game.energy=100;update();}],
   ["doubleCoinsBtn",()=>{if(game.coins<1000)return alert("Need 1000 Stars");game.coins-=1000;game.doubleCoins=true;update();}]
 ];
-
 btnMap.forEach(([id,fn])=>{
   const el=document.getElementById(id);
   el.addEventListener("click",fn);
   el.addEventListener("touchstart",(e)=>{ e.preventDefault(); fn(); });
 });
 
-// ==============================
 // Auto Energy & Miner
-// ==============================
-setInterval(()=>{
-  if(game.energy<100){ game.energy+=5; if(game.energy>100)game.energy=100; update(); }
-},3000);
+setInterval(()=>{ if(game.energy<100){ game.energy+=5; if(game.energy>100)game.energy=100; update(); } },3000);
+setInterval(()=>{ if(game.miners>0){ game.coins+=game.miners; game.xp+=game.miners; update(); } },1000);
 
-setInterval(()=>{
-  if(game.miners>0){ game.coins+=game.miners; game.xp+=game.miners; update(); }
-},1000);
-
-// ==============================
 // Tasks
-// ==============================
 function claimTask(id){ if(id===1 && !game.tasks.task1 && game.coins>=100){game.tasks.task1=true;game.coins+=50;} 
 if(id===2 && !game.tasks.task2 && game.miners>=1){game.tasks.task2=true;game.coins+=150;}
 if(id===3 && !game.tasks.task3 && game.level>=5){game.tasks.task3=true;game.coins+=500;}
@@ -171,9 +145,7 @@ function claimDailyMission(id){
 }
 window.claimDailyMission=claimDailyMission;
 
-// ==============================
 // Live Leaderboard
-// ==============================
 async function updateLeaderboard(){
   const board=document.getElementById("leaderboard");
   try{
@@ -190,9 +162,7 @@ async function updateLeaderboard(){
   }catch(err){ board.innerHTML="Failed to load leaderboard."; console.error(err);}
 }
 
-// ==============================
 // Init
-// ==============================
 loadCloudSave();
 updateLeaderboard();
 setInterval(updateLeaderboard,5000);
