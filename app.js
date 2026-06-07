@@ -9,26 +9,20 @@ energy:100,
 power:1,
 miners:0,
 xpBoost:false
-document
-.getElementById("energyBoostBtn")
-.onclick = ()=>{
 
-if(game.coins < 300)
-return alert("Need 300 Stars");
-
-game.coins -= 300;
-
-game.energy = 100;
-
-alert("⚡ Energy Full");
-
-update();
-
-};
 };
 
 game.tasks =
 game.tasks || {
+
+task1:false,
+task2:false,
+task3:false,
+telegram:false,
+twitter:false
+
+};
+
 game.dailyMissions =
 game.dailyMissions || {
 
@@ -37,20 +31,13 @@ upgrade1:false,
 dailyReward:false
 
 };
+
 game.achievements =
 game.achievements || {
 
 stars1000:false,
 level10:false,
 miners10:false
-
-};
-task1:false,
-task2:false,
-task3:false,
-
-telegram:false,
-twitter:false
 
 };
 
@@ -334,7 +321,22 @@ update();
 document
 .getElementById("boostBtn")
 .onclick = ()=>{
+document
+.getElementById("energyBoostBtn")
+.onclick = ()=>{
 
+if(game.coins < 300)
+return alert("Need 300 Stars");
+
+game.coins -= 300;
+
+game.energy = 100;
+
+alert("⚡ Energy Full");
+
+update();
+
+};
 if(game.coins < 500){
 
 alert(
