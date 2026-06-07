@@ -14,6 +14,13 @@ xpBoost:false
 
 game.tasks =
 game.tasks || {
+...
+};
+
+game.dailyMissions =
+game.dailyMissions || {
+...
+};
 
 task1:false,
 task2:false,
