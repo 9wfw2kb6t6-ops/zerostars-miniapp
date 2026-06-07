@@ -115,4 +115,121 @@ window.claimTwitterTask=claimTwitterTask;
 window.claimDailyMission=claimDailyMission;
 
 // WALLET
-async function connectWallet(){if(typeof window.ethereum!=="undefined"){try{const accounts
+async function connectWallet(){
+
+  if(typeof window.ethereum !== "undefined"){
+
+    try{
+
+      const accounts = await window.ethereum.request({
+        method:"eth_requestAccounts"
+      });
+
+      const account = accounts[0];
+
+      if(walletAddr){
+        walletAddr.textContent =
+          "Connected: " + account;
+      }
+
+      game.wallet = account;
+
+      update();
+
+    }catch(err){
+
+      console.error(err);
+
+      alert("Wallet connection failed");
+
+    }
+
+  }else{
+
+    alert("MetaMask not found");
+
+  }
+
+}
+
+if(walletBtn){
+  walletBtn.addEventListener(
+    "click",
+    connectWallet
+  );
+}
+
+// LEADERBOARD
+async function updateLeaderboard(){
+
+  const board =
+    document.getElementById(
+      "leaderboard"
+    );
+
+  if(!board) return;
+
+  try{
+
+    const snap =
+      await getDocs(
+        collection(db,"players")
+      );
+
+    let players = [];
+
+    snap.forEach(docSnap=>{
+
+      const data = docSnap.data();
+
+      players.push({
+        username:docSnap.id,
+        coins:data.coins || 0,
+        level:data.level || 1
+      });
+
+    });
+
+    players.sort(
+      (a,b)=>b.coins-a.coins
+    );
+
+    board.innerHTML = "";
+
+    players.slice(0,10)
+    .forEach((p,index)=>{
+
+      const div =
+        document.createElement("div");
+
+      div.innerHTML =
+        `#${index+1} ${p.username}
+         - ${p.coins} ⭐
+         | Lv.${p.level}`;
+
+      board.appendChild(div);
+
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+    board.innerHTML =
+      "Leaderboard unavailable";
+
+  }
+
+}
+
+// INIT
+loadCloudSave();
+
+update();
+
+updateLeaderboard();
+
+setInterval(
+  updateLeaderboard,
+  10000
+);
