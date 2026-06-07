@@ -1,34 +1,158 @@
+/* ==============================
+   Reset & Base
+============================== */
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  background: linear-gradient(180deg,#050816,#0f172a);
+  color:white;
+  font-family:Arial,sans-serif;
+  min-height:100vh;
+  text-align:center;
+}
+
+/* ==============================
+   Container
+============================== */
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+/* ==============================
+   Top Card
+============================== */
+.top-card{
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+  padding:20px;
+  border-radius:20px;
+  margin-bottom:20px;
+  box-shadow: 0 0 20px rgba(0,0,0,.3);
+}
+
+.top-card h1{
+  margin-bottom:15px;
+}
+
+.stats{
+  display:flex;
+  gap:10px;
+}
+
+.stat{
+  flex:1;
+  background: rgba(255,255,255,.05);
+  padding:15px;
+  border-radius:15px;
+}
+
+/* ==============================
+   Panels
+============================== */
+.panel{
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(10px);
+  padding:15px;
+  border-radius:20px;
+  margin-bottom:15px;
+}
+
+/* ==============================
+   Bars
+============================== */
+.bar{
+  height:22px;
+  background:#1e293b;
+  border-radius:50px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+#xpFill{
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg,#f59e0b,#facc15);
+  transition:.3s;
+}
+
+#energyFill{
+  height:100%;
+  width:100%;
+  background: linear-gradient(90deg,#22c55e,#4ade80);
+  transition:.3s;
+}
+
+/* ==============================
+   Star Logo Click
+============================== */
 .star{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin:25px auto;
-    cursor:pointer;
-    user-select:none;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin:25px auto;
+  cursor:pointer;
+  user-select:none;
 }
 
 .logo-img{
-    width:220px;
-    height:220px;
-    object-fit:contain;
-    pointer-events:none;
-    filter:drop-shadow(0 0 25px gold);
-    transition:0.15s;
-    animation:pulse 2s infinite;
+  width:220px;
+  height:220px;
+  object-fit:contain;
+  pointer-events:none;
+  filter:drop-shadow(0 0 25px gold);
+  transition:0.15s;
+  animation:pulse 2s infinite;
 }
 
 .star:active .logo-img{
-    transform:scale(0.9);
+  transform:scale(0.9);
 }
 
 @keyframes pulse{
-    0%{
-        transform:scale(1);
-    }
-    50%{
-        transform:scale(1.05);
-    }
-    100%{
-        transform:scale(1);
-    }
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.05); }
+  100%{ transform:scale(1); }
+}
+
+/* ==============================
+   Buttons
+============================== */
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  border:none;
+  border-radius:14px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+  background: linear-gradient(90deg,#2563eb,#3b82f6);
+  color:white;
+  transition:.1s;
+}
+
+button:active{
+  transform:scale(.97);
+}
+
+/* ==============================
+   Floating Text
+============================== */
+.floating{
+  position:fixed;
+  font-weight:bold;
+  font-size:22px;
+  pointer-events:none;
+  animation: floatUp 1s linear forwards;
+}
+
+@keyframes floatUp{
+  0%{ opacity:1; transform:translateY(0); }
+  100%{ opacity:0; transform:translateY(-80px); }
 }
