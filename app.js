@@ -9,12 +9,34 @@ energy:100,
 power:1,
 miners:0,
 xpBoost:false
+document
+.getElementById("energyBoostBtn")
+.onclick = ()=>{
 
+if(game.coins < 300)
+return alert("Need 300 Stars");
+
+game.coins -= 300;
+
+game.energy = 100;
+
+alert("⚡ Energy Full");
+
+update();
+
+};
 };
 
 game.tasks =
 game.tasks || {
+game.achievements =
+game.achievements || {
 
+stars1000:false,
+level10:false,
+miners10:false
+
+};
 task1:false,
 task2:false,
 task3:false,
@@ -94,7 +116,50 @@ game.energy + " / 100";
 
 energyFill.style.width =
 game.energy + "%";
+if(
+game.coins >= 1000 &&
+!game.achievements.stars1000
+){
 
+game.achievements.stars1000 = true;
+
+document.getElementById("ach1")
+.innerHTML =
+"✅ Reach 1000 Stars";
+
+game.coins += 500;
+
+}
+
+if(
+game.level >= 10 &&
+!game.achievements.level10
+){
+
+game.achievements.level10 = true;
+
+document.getElementById("ach2")
+.innerHTML =
+"✅ Reach Level 10";
+
+game.coins += 1000;
+
+}
+
+if(
+game.miners >= 10 &&
+!game.achievements.miners10
+){
+
+game.achievements.miners10 = true;
+
+document.getElementById("ach3")
+.innerHTML =
+"✅ Buy 10 Miners";
+
+game.coins += 1500;
+
+}
 save();
 
 }
