@@ -60,7 +60,13 @@ function update(){
   minersEl.textContent=game.miners;
   const maxXp=game.level*100;
   xpText.textContent=`${game.xp} / ${maxXp}`;
-  xpFill.style.width=(game.xp/maxXp*100)+"%";
+  let xpPercent = (game.xp / maxXp) * 100;
+
+if(xpPercent > 100){
+   xpPercent = 100;
+}
+
+xpFill.style.width = xpPercent + "%";
   energyText.textContent=`${game.energy} / 100`;
   energyFill.style.width=game.energy+"%";
 
