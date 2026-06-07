@@ -1,6 +1,3 @@
-/* ==============================
-   Reset & Base
-============================== */
 *{
   margin:0;
   padding:0;
@@ -8,143 +5,202 @@
 }
 
 body{
-  background: radial-gradient(circle at top,#0f172a,#020617 70%);
-  color:white;
+  background:#050505;
+  color:#ffffff;
   font-family:Arial,sans-serif;
-  min-height:100vh;
   text-align:center;
+  overflow-x:hidden;
 }
 
-/* ==============================
-   Container
-============================== */
 .container{
-  max-width:700px;
+  max-width:650px;
   margin:auto;
-  padding:20px;
+  padding:15px;
+  padding-bottom:100px;
 }
 
-/* ==============================
-   Top Card & Panels
-============================== */
 .top-card,
 .panel{
-  background: rgba(255,255,255,.08);
-  backdrop-filter: blur(15px);
-  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,215,0,.15);
   border-radius:24px;
   padding:20px;
-  margin-bottom:20px;
-  box-shadow: 0 0 25px rgba(0,0,0,.4);
+  margin-bottom:18px;
+  box-shadow:0 0 20px rgba(255,215,0,.08);
 }
 
 .top-card h1{
-  text-align:center;
-  margin-bottom:20px;
-  font-size:42px;
+  color:#ffd700;
+  font-size:32px;
+  margin-bottom:10px;
 }
 
-.stats{
+.top-card p{
+  color:#cccccc;
+}
+
+.stats-row{
   display:flex;
-  gap:15px;
+  gap:12px;
 }
 
 .stat{
   flex:1;
-  background: rgba(255,255,255,.05);
-  border-radius:18px;
-  padding:18px;
-  text-align:center;
+  background:rgba(255,255,255,.05);
+  border-radius:16px;
+  padding:15px;
 }
 
-/* ==============================
-   Bars
-============================== */
+.stat p{
+  color:#cccccc;
+}
+
+.stat h2{
+  color:#ffd700;
+  font-size:28px;
+}
+
+.label-row{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  color:white;
+}
+
 .bar{
   width:100%;
-  height:24px;
-  background:#1e293b;
+  height:18px;
+  background:#222;
   border-radius:50px;
   overflow:hidden;
-  margin-top:10px;
 }
 
 #xpFill{
   height:100%;
   width:0%;
-  background: linear-gradient(90deg,#f59e0b,#facc15);
-  transition:.3s;
+  background:linear-gradient(90deg,#ffb300,#ffd700);
 }
 
 #energyFill{
   height:100%;
   width:100%;
-  background: linear-gradient(90deg,#22c55e,#4ade80);
-  transition:.3s;
+  background:linear-gradient(90deg,#22c55e,#4ade80);
 }
 
-/* ==============================
-   Star Logo Click
-============================== */
+.tap-section{
+  margin:25px 0;
+}
+
 .star{
+  width:160px;
+  height:160px;
+  margin:auto;
   display:flex;
-  justify-content:center;
   align-items:center;
-  margin:30px auto;
+  justify-content:center;
   cursor:pointer;
+  border-radius:50%;
+  background:radial-gradient(circle,
+      rgba(255,215,0,.25),
+      rgba(255,215,0,.08),
+      transparent 75%);
 }
 
-.logo-img{
-  width:220px;
-  height:220px;
-  object-fit:contain;
-  border-radius:20px;
-  filter: drop-shadow(0 0 20px gold)
-          drop-shadow(0 0 50px rgba(255,215,0,.5));
-  animation:pulse 2s infinite;
+.main-logo{
+  width:110px;
+  height:110px;
+  object-fit:cover;
+  border-radius:50%;
+  border:3px solid rgba(255,215,0,.4);
+  box-shadow:
+      0 0 20px rgba(255,215,0,.7),
+      0 0 50px rgba(255,215,0,.3);
   transition:.15s;
 }
 
-.star:active .logo-img{
-  transform: scale(.92);
+.star:active .main-logo{
+  transform:scale(.9);
 }
 
-@keyframes pulse{
-  0%{ transform:scale(1); }
-  50%{ transform:scale(1.05); }
-  100%{ transform:scale(1); }
+.tap-text{
+  color:#ffd700;
+  margin-top:15px;
+  font-size:20px;
+  font-weight:700;
+  letter-spacing:3px;
 }
 
-/* ==============================
-   Buttons
-============================== */
+.stats-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.mini-card{
+  background:rgba(255,255,255,.05);
+  border-radius:15px;
+  padding:15px;
+}
+
+.mini-card p{
+  color:#cccccc;
+}
+
+.mini-card h2{
+  color:#ffd700;
+}
+
+.task{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.task:last-child{
+  border-bottom:none;
+}
+
 button{
   width:100%;
-  padding:14px;
+  height:52px;
   margin-top:10px;
   border:none;
   border-radius:14px;
   font-size:16px;
   font-weight:bold;
   cursor:pointer;
-  color:white;
-  background: linear-gradient(90deg,#2563eb,#3b82f6);
-  transition:.1s;
+  color:#000;
+  background:linear-gradient(90deg,#ffd700,#ffb300);
 }
 
 button:active{
   transform:scale(.97);
 }
 
-/* ==============================
-   Floating Text
-============================== */
+#walletAddress{
+  color:#ffd700;
+  margin-top:10px;
+  word-break:break-all;
+}
+
+#leaderboard div{
+  background:rgba(255,255,255,.05);
+  padding:10px;
+  border-radius:10px;
+  margin-top:8px;
+}
+
 .floating{
   position:fixed;
+  color:#ffd700;
   font-size:22px;
   font-weight:bold;
   pointer-events:none;
-  animation: floatUp 1s linear forwards;
+  z-index:9999;
+  animation:floatUp 1s linear forwards;
 }
 
 @keyframes floatUp{
@@ -155,5 +211,51 @@ button:active{
   100%{
     opacity:0;
     transform:translateY(-80px);
+  }
+}
+
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  background:#0a0a0a;
+  border-top:1px solid rgba(255,215,0,.15);
+  display:flex;
+  justify-content:space-around;
+  padding:10px 0;
+  z-index:999;
+}
+
+.nav-btn{
+  text-decoration:none;
+  color:#ffffff;
+  font-size:12px;
+}
+
+.nav-btn span{
+  display:block;
+  font-size:22px;
+  margin-bottom:3px;
+}
+
+@media(max-width:768px){
+
+  .top-card h1{
+    font-size:28px;
+  }
+
+  .main-logo{
+    width:95px;
+    height:95px;
+  }
+
+  .star{
+    width:140px;
+    height:140px;
+  }
+
+  .stats-row{
+    flex-direction:column;
   }
 }
