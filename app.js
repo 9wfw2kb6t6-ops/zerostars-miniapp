@@ -1,3 +1,32 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+doc,
+setDoc,
+getDoc
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyBfOoEJ0BxhhjkXdL4ae-z5dSrflRG6GQc",
+authDomain: "zerostars-97e21.firebaseapp.com",
+projectId: "zerostars-97e21",
+storageBucket: "zerostars-97e21.firebasestorage.app",
+messagingSenderId: "617216289630",
+appId: "1:617216289630:web:d5d44b81af4ed85e113dcf",
+measurementId: "G-VYWB3L69PK"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getFirestore(app);
+
+
 let game = JSON.parse(
 localStorage.getItem("zerostars_save")
 ) || {
@@ -21,6 +50,62 @@ telegram:false,
 twitter:false
 
 };
+let username =
+localStorage.getItem("username");
+
+if(!username){
+
+username = prompt(
+"Enter Username"
+);
+
+localStorage.setItem(
+"username",
+username
+);
+
+}
+
+async function loadCloudSave(){
+
+const ref =
+doc(
+db,
+"players",
+username
+);
+
+const snap =
+await getDoc(ref);
+
+if(snap.exists()){
+
+game = snap.data();
+
+update();
+
+console.log(
+"Cloud Save Loaded"
+);
+
+}
+
+}
+
+async function saveCloud(){
+
+await setDoc(
+doc(
+db,
+"players",
+username
+),
+game
+);
+
+}
+
+loadCloudSave();
 
 const coinsEl =
 document.getElementById("coins");
@@ -49,7 +134,21 @@ localStorage.setItem(
 "zerostars_save",
 JSON.stringify(game)
 );
+async function loadCloudSave(){
+  const ref = doc(db,"players",username);
+  const snap = await getDoc(ref);
+  if(snap.exists()){
+    game = snap.data();
+    update();
+  }
+}
 
+async function saveCloud(){
+  await setDoc(doc(db,"players",username), game);
+}
+
+loadCloudSave();
+  
 }
 
 function update(){
@@ -76,7 +175,18 @@ energyFill.style.width =
 game.energy + "%";
 
 save();
+function save(){
 
+localStorage.setItem(
+"zerostars_save",
+JSON.stringify(game)
+);
+
+saveCloud();
+
+}
+
+  
 }
 
 document
