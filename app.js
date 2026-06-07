@@ -468,3 +468,48 @@ update();
 }
 
 update();
+// ==============================
+// Live Leaderboard
+// ==============================
+
+async function updateLeaderboard() {
+  const leaderboardEl = document.getElementById("leaderboard");
+  
+  try {
+    const playersSnapshot = await getDocs(
+      collection(db, "players")
+    );
+
+    // ساخت آرایه‌ای از بازیکن‌ها
+    const players = [];
+    playersSnapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      players.push({
+        username: docSnap.id,
+        coins: data.coins || 0,
+        level: data.level || 1
+      });
+    });
+
+    // مرتب‌سازی بر اساس Coins (Descending)
+    players.sort((a,b) => b.coins - a.coins);
+
+    // نمایش 10 نفر اول
+    leaderboardEl.innerHTML = "<h3>🏆 Top Players</h3>";
+    players.slice(0,10).forEach(p => {
+      const div = document.createElement("div");
+      div.textContent = `${p.username} - ${p.coins} Stars (Level ${p.level})`;
+      leaderboardEl.appendChild(div);
+    });
+
+  } catch(e) {
+    console.error("Leaderboard Error:", e);
+    leaderboardEl.textContent = "Failed to load leaderboard.";
+  }
+}
+
+// هر 5 ثانیه به‌روزرسانی Leaderboard
+setInterval(updateLeaderboard,5000);
+
+// بارگذاری اولیه
+updateLeaderboard();
