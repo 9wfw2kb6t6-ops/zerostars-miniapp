@@ -1,143 +1,37 @@
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-
-body{
-background:linear-gradient(180deg,#050816,#0f172a);
-color:#fff;
-font-family:Arial,sans-serif;
-min-height:100vh;
-}
-
-.container{
-max-width:700px;
-margin:auto;
-padding:20px;
-}
-
-.top-card{
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(10px);
-padding:20px;
-border-radius:20px;
-margin-bottom:20px;
-box-shadow:0 0 20px rgba(0,0,0,.3);
-text-align:center;
-}
-
-.top-card h1{
-margin-bottom:15px;
-}
-
-.stats{
-display:flex;
-gap:10px;
-}
-
-.stat{
-flex:1;
-background:rgba(255,255,255,.05);
-padding:15px;
-border-radius:15px;
-}
-
-.panel{
-background:rgba(255,255,255,.08);
-backdrop-filter:blur(10px);
-padding:15px;
-border-radius:20px;
-margin-bottom:15px;
-}
-
-.bar{
-height:22px;
-background:#1e293b;
-border-radius:50px;
-overflow:hidden;
-margin-top:10px;
-}
-
-#xpFill{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#f59e0b,#facc15);
-transition:width .3s ease;
-}
-
-#energyFill{
-height:100%;
-width:100%;
-background:linear-gradient(90deg,#22c55e,#4ade80);
-transition:width .3s ease;
-}
-
 .star{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  margin:20px 0;
-  cursor:pointer;
-  user-select:none;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:25px 0;
+cursor:pointer;
+user-select:none;
 }
 
 .star img{
-  width:220px;
-  height:220px;
-  object-fit:contain;
-  transition:.1s;
-  filter:drop-shadow(0 0 25px gold);
+width:220px;
+height:220px;
+object-fit:contain;
+transition:0.15s;
+filter:drop-shadow(0 0 25px gold);
+animation:pulse 2s infinite;
 }
 
 .star:active img{
-  transform:scale(.9);
+transform:scale(0.9);
 }
 
-button{
-width:100%;
-padding:14px;
-margin-top:10px;
-border:none;
-border-radius:14px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-background:linear-gradient(90deg,#2563eb,#3b82f6);
-color:white;
-transition:.15s;
-}
+@keyframes pulse{
 
-button:hover{
-transform:translateY(-2px);
-}
-
-button:active{
-transform:scale(.97);
-}
-
-#leaderboard div{
-padding:8px;
-margin-top:5px;
-background:rgba(255,255,255,.05);
-border-radius:10px;
-}
-
-.floating{
-position:fixed;
-font-weight:bold;
-font-size:22px;
-pointer-events:none;
-animation:floatUp 1s linear forwards;
-}
-
-@keyframes floatUp{
 0%{
-opacity:1;
-transform:translateY(0);
+transform:scale(1);
 }
+
+50%{
+transform:scale(1.05);
+}
+
 100%{
-opacity:0;
-transform:translateY(-80px);
+transform:scale(1);
 }
+
 }
