@@ -18,6 +18,8 @@ const db = getFirestore(app);
 // Game state
 let game = JSON.parse(localStorage.getItem("zerostars_save")) || {
   coins:0, level:1, xp:0, energy:100, power:1, miners:0,
+referrals:0,
+referredBy:null,
   xpBoost:false, doubleCoins:false,
   tasks:{task1:false,task2:false,task3:false,telegram:false,twitter:false},
   dailyMissions:{mine100:false,upgrade1:false,dailyReward:false},
@@ -30,6 +32,7 @@ if(!username){
   username = "Player_" + Math.floor(Math.random()*999999);
   localStorage.setItem("username", username);
 }
+const referralCode = username;
 // Cloud Save
 async function loadCloudSave(){
   try{
