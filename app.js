@@ -182,9 +182,24 @@ window.claimTwitterTask = claimTwitterTask;
 function claimDailyMission(id){
   if(id===1 && game.dailyMissions.mine100===true){game.dailyMissions.mine100="claimed";game.coins+=300;}
   if(id===2 && game.dailyMissions.upgrade1===true){game.dailyMissions.upgrade1="claimed";game.coins+=500;}
-  if(id===3 && game.dailyMissions.dailyReward===true){game.dailyMissions.dailyReward="claimed";game.coins+=200;}
+  if(id===3 && game.dailyMissions.dailyReward===true){game.dailyMissions.dailyReward="claimed";game.coins+=200;} 
   update();
 }
+function copyReferral(){
+
+  const link =
+    window.location.origin +
+    window.location.pathname +
+    "?ref=" +
+    username;
+
+  navigator.clipboard.writeText(link);
+
+  alert("Referral Link Copied:\n" + link);
+}
+
+window.copyReferral = copyReferral;
+
 window.claimDailyMission=claimDailyMission;
 
 // Wallet Connect
