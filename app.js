@@ -207,3 +207,93 @@ if(walletBtn) { walletBtn.addEventListener("click", connectWallet); }
     update();
   } catch(err){ console.error(err); update(); }
 })();
+// Auto Energy
+
+setInterval(() => {
+  if(game.energy < 500){
+    game.energy += 5;
+
+    if(game.energy > 500){
+      game.energy = 500;
+    }
+
+    update();
+  }
+},3000);
+
+
+// Auto Miner
+
+setInterval(() => {
+
+  if(game.miners > 0){
+
+    game.coins += game.miners;
+    game.xp += game.miners;
+
+    while(game.xp >= game.level * 100){
+      game.xp -= game.level * 100;
+      game.level++;
+    }
+
+    update();
+  }
+
+},1000);
+
+
+// Leaderboard
+
+async function updateLeaderboard(){
+
+  const board = document.getElementById("leaderboard");
+
+  if(!board) return;
+
+  try{
+
+    const snap = await getDocs(collection(db,"players"));
+
+    let players = [];
+
+    snap.forEach(docSnap => {
+
+      const data = docSnap.data();
+
+      players.push({
+        username: docSnap.id,
+        coins: data.coins || 0,
+        level: data.level || 1
+      });
+
+    });
+
+    players.sort((a,b)=>b.coins-a.coins);
+
+    board.innerHTML = "<h3>🏆 Top Players</h3>";
+
+    players.slice(0,10).forEach((p,i)=>{
+
+      const div = document.createElement("div");
+
+      div.textContent =
+        `#${i+1} ${p.username} - ${p.coins} ⭐ | Lv.${p.level}`;
+
+      board.appendChild(div);
+
+    });
+
+  }catch(err){
+
+    console.error(err);
+
+  }
+
+}
+
+
+// Start Leaderboard
+
+updateLeaderboard();
+
+setInterval(updateLeaderboard,5000);
