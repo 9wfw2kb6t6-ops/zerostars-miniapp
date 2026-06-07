@@ -29,6 +29,14 @@ update();
 
 game.tasks =
 game.tasks || {
+game.dailyMissions =
+game.dailyMissions || {
+
+mine100:false,
+upgrade1:false,
+dailyReward:false
+
+};
 game.achievements =
 game.achievements || {
 
@@ -203,6 +211,9 @@ if(game.xpBoost)
 gain *= 2;
 
 game.coins += gain;
+if(game.coins >= 100){
+game.dailyMissions.mine100 = true;
+}
 game.xp += gain;
 
 game.energy--;
@@ -253,7 +264,7 @@ return;
 game.coins -= cost;
 
 game.power++;
-
+game.dailyMissions.upgrade1 = true;
 update();
 
 };
@@ -311,7 +322,7 @@ today
 );
 
 game.coins += 500;
-
+game.dailyMissions.dailyReward = true;
 alert(
 "🎁 +500 Stars"
 );
@@ -473,5 +484,48 @@ alert("🐦 X Reward +500");
 update();
 
 }
+function claimDailyMission(id){
 
+if(id === 1){
+
+if(!game.dailyMissions.mine100)
+return alert("Mine 100 Stars First");
+
+game.coins += 300;
+
+game.dailyMissions.mine100 = "claimed";
+
+alert("🎯 +300 Stars");
+
+}
+
+if(id === 2){
+
+if(!game.dailyMissions.upgrade1)
+return alert("Buy Upgrade First");
+
+game.coins += 500;
+
+game.dailyMissions.upgrade1 = "claimed";
+
+alert("🎯 +500 Stars");
+
+}
+
+if(id === 3){
+
+if(!game.dailyMissions.dailyReward)
+return alert("Claim Daily Reward First");
+
+game.coins += 200;
+
+game.dailyMissions.dailyReward = "claimed";
+
+alert("🎯 +200 Stars");
+
+}
+
+update();
+
+}
 update();
