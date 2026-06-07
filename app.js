@@ -63,7 +63,7 @@ function update(){
   minersEl.textContent=game.miners;
   const maxXp=game.level*100;
   xpText.textContent=`${game.xp} / ${maxXp}`;
-  xpFill.style.width=(game.xp/maxXp*100)+"%";
+  xpFill.style.width=Math.min((game.xp/maxXp*100),100)+"%";
   energyText.textContent=`${game.energy} / 100`;
   energyFill.style.width=game.energy+"%";
 
@@ -117,7 +117,20 @@ btnMap.forEach(([id,fn])=>{
 
 // Auto Energy / Miner
 setInterval(()=>{if(game.energy<100){game.energy+=5;if(game.energy>100)game.energy=100;update();}},3000);
-setInterval(()=>{if(game.miners>0){game.coins+=game.miners;game.xp+=game.miners;update();}},1000);
+setInterval(()=>{
+  if(game.miners>0){
+
+    game.coins += game.miners;
+    game.xp += game.miners;
+
+    while(game.xp >= game.level * 100){
+      game.xp -= game.level * 100;
+      game.level++;
+    }
+
+    update();
+  }
+},1000);
 
 // Tasks
 function claimTask(id){if(id===1 && !game.tasks.task1 && game.coins>=100){game.tasks.task1=true;game.coins+=50;}
