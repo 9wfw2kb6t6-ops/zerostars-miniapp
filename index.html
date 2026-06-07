@@ -12,10 +12,8 @@
 
   <!-- Top Card -->
   <div class="top-card">
-    <h1>ZeroStars ⭐</h1>
-    <div class="star">
-      <img src="IMG_1874.jpeg" alt="ZeroStars Logo" class="logo-img">
-    </div>
+    <h1>⭐ ZeroStars</h1>
+    <img src="IMG_1874.jpeg" alt="ZeroStars Logo" class="logo-img"/>
     <div class="stats">
       <div class="stat">
         <p>💰 Stars</p>
@@ -31,22 +29,23 @@
   <!-- XP Bar -->
   <div class="panel">
     <p>XP</p>
-    <div class="bar">
-      <div id="xpFill"></div>
-    </div>
+    <div class="bar"><div id="xpFill"></div></div>
     <p id="xpText">0 / 100</p>
   </div>
 
   <!-- Energy Bar -->
   <div class="panel">
     <p>⚡ Energy</p>
-    <div class="bar energy-bar">
-      <div id="energyFill"></div>
-    </div>
+    <div class="bar energy-bar"><div id="energyFill"></div></div>
     <p id="energyText">100 / 100</p>
   </div>
 
-  <!-- Buttons Panel -->
+  <!-- Main Star -->
+  <div id="star" class="star">
+    <img src="IMG_1874.jpeg" alt="ZeroStars" class="logo-img"/>
+  </div>
+
+  <!-- Buttons -->
   <div class="panel">
     <button id="upgradeBtn">⛏ Upgrade Power</button>
     <button id="minerBtn">🤖 Buy Miner</button>
@@ -54,6 +53,8 @@
     <button id="boostBtn">🚀 XP Boost (500)</button>
     <button id="energyBoostBtn">⚡ Energy Boost (300)</button>
     <button id="doubleCoinsBtn">💰 Double Coins (1000)</button>
+    <button id="connectWalletBtn">🔗 Connect Wallet</button>
+    <p id="walletAddress"></p>
   </div>
 
   <!-- Player Stats -->
@@ -66,28 +67,13 @@
   <!-- Tasks -->
   <div class="panel">
     <h3>📋 Tasks</h3>
-    <div>
-      📢 Join Telegram
-      <a href="https://t.me/zeroStarsuru" target="_blank"><button>Join Telegram</button></a>
-      <button onclick="claimTelegramTask()">Claim +500</button>
-    </div>
-    <div>
-      🐦 Follow X
-      <a href="https://x.com/zerostartsuru?s=11" target="_blank"><button>Follow X</button></a>
-      <button onclick="claimTwitterTask()">Claim +500</button>
-    </div>
-    <div>
-      ⭐ Reach 100 Stars
-      <button onclick="claimTask(1)">Claim</button>
-    </div>
-    <div>
-      🤖 Buy First Miner
-      <button onclick="claimTask(2)">Claim</button>
-    </div>
-    <div>
-      🏆 Reach Level 5
-      <button onclick="claimTask(3)">Claim</button>
-    </div>
+    <div>📢 Join Telegram <a href="https://t.me/zeroStarsuru" target="_blank"><button>Join Telegram</button></a>
+      <button onclick="claimTelegramTask()">Claim +500</button></div>
+    <div>🐦 Follow X <a href="https://x.com/zerostartsuru?s=11" target="_blank"><button>Follow X</button></a>
+      <button onclick="claimTwitterTask()">Claim +500</button></div>
+    <div>⭐ Reach 100 Stars <button onclick="claimTask(1)">Claim</button></div>
+    <div>🤖 Buy First Miner <button onclick="claimTask(2)">Claim</button></div>
+    <div>🏆 Reach Level 5 <button onclick="claimTask(3)">Claim</button></div>
   </div>
 
   <!-- Daily Missions -->
