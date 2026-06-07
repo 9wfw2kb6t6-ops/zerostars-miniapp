@@ -4,10 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ZeroStars V5</title>
+
 <link rel="stylesheet" href="style.css">
+
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-</head>
-<body>
 
 <script>
 const tg = window.Telegram.WebApp;
@@ -15,97 +15,210 @@ tg.ready();
 tg.expand();
 </script>
 
+</head>
+
+<body>
+
 <div class="container">
 
   <!-- HEADER -->
   <div class="top-card">
+
     <div class="profile-info">
       <h1>ZeroStars ⭐</h1>
       <p>Tap • Earn • Upgrade</p>
     </div>
+
     <div class="stats-row">
-      <div class="stat"><p>⭐ Stars</p><h2 id="coins">0</h2></div>
-      <div class="stat"><p>🏆 Level</p><h2 id="level">1</h2></div>
+
+      <div class="stat">
+        <p>⭐ Stars</p>
+        <h2 id="coins">0</h2>
+      </div>
+
+      <div class="stat">
+        <p>🏆 Level</p>
+        <h2 id="level">1</h2>
+      </div>
+
     </div>
+
   </div>
 
   <!-- XP -->
   <div class="panel">
-    <div class="label-row"><span>XP</span><span id="xpText">0 / 100</span></div>
-    <div class="bar"><div id="xpFill"></div></div>
+
+    <div class="label-row">
+      <span>XP</span>
+      <span id="xpText">0 / 100</span>
+    </div>
+
+    <div class="bar">
+      <div id="xpFill"></div>
+    </div>
+
   </div>
 
   <!-- ENERGY -->
   <div class="panel">
-    <div class="label-row"><span>⚡ Energy</span><span id="energyText">100 / 100</span></div>
-    <div class="bar energy-bar"><div id="energyFill"></div></div>
+
+    <div class="label-row">
+      <span>⚡ Energy</span>
+      <span id="energyText">100 / 100</span>
+    </div>
+
+    <div class="bar energy-bar">
+      <div id="energyFill"></div>
+    </div>
+
   </div>
 
-  <!-- TAP -->
+  <!-- TAP SECTION -->
   <div class="tap-section" id="tap-section">
+
     <div id="star" class="star">
       <img src="IMG_1874.jpeg" alt="ZeroStars" class="main-logo">
     </div>
-    <p class="tap-text">⭐ TAP TO MINE ⭐</p>
+
+    <p class="tap-text">
+      ⭐ TAP TO MINE ⭐
+    </p>
+
   </div>
 
   <!-- PLAYER STATS -->
   <div class="panel" id="stats-section">
+
     <h3>Player Stats</h3>
+
     <div class="stats-grid">
-      <div class="mini-card"><p>Power</p><h2 id="power">1</h2></div>
-      <div class="mini-card"><p>Miners</p><h2 id="miners">0</h2></div>
+
+      <div class="mini-card">
+        <p>Power</p>
+        <h2 id="power">1</h2>
+      </div>
+
+      <div class="mini-card">
+        <p>Miners</p>
+        <h2 id="miners">0</h2>
+      </div>
+
     </div>
+
   </div>
 
   <!-- UPGRADES -->
   <div class="panel" id="upgrades-section">
+
     <h3>Boosts & Upgrades</h3>
+
     <button id="upgradeBtn">⛏ Upgrade Power</button>
+
     <button id="minerBtn">🤖 Buy Miner</button>
+
     <button id="dailyBtn">🎁 Daily Reward</button>
+
     <button id="boostBtn">🚀 XP Boost</button>
+
     <button id="energyBoostBtn">⚡ Energy Boost</button>
+
     <button id="doubleCoinsBtn">💰 Double Coins</button>
-    <button id="connectWalletBtn">🔗 Connect Wallet</button>
+
+    <button id="connectWalletBtn">
+      🔗 Connect Wallet
+    </button>
+
     <p id="walletAddress"></p>
+
   </div>
 
   <!-- TASKS -->
   <div class="panel" id="tasks-section">
+
     <h3>📋 Tasks</h3>
-    <div class="task"><span>Join Telegram</span><button onclick="claimTelegramTask()">Claim +500</button></div>
-    <div class="task"><span>Follow X</span><button onclick="claimTwitterTask()">Claim +500</button></div>
-    <div class="task"><span>Reach 100 Stars</span><button onclick="claimTask(1)">Claim</button></div>
-    <div class="task"><span>Buy First Miner</span><button onclick="claimTask(2)">Claim</button></div>
-    <div class="task"><span>Reach Level 5</span><button onclick="claimTask(3)">Claim</button></div>
+
+    <div class="task">
+      <span>Join Telegram</span>
+      <button onclick="claimTelegramTask()">Claim +500</button>
+    </div>
+
+    <div class="task">
+      <span>Follow X</span>
+      <button onclick="claimTwitterTask()">Claim +500</button>
+    </div>
+
+    <div class="task">
+      <span>Reach 100 Stars</span>
+      <button onclick="claimTask(1)">Claim</button>
+    </div>
+
+    <div class="task">
+      <span>Buy First Miner</span>
+      <button onclick="claimTask(2)">Claim</button>
+    </div>
+
+    <div class="task">
+      <span>Reach Level 5</span>
+      <button onclick="claimTask(3)">Claim</button>
+    </div>
+
   </div>
 
   <!-- ACHIEVEMENTS -->
   <div class="panel" id="achievements-section">
+
     <h3>🏅 Achievements</h3>
+
     <p id="ach1">🔒 Reach 1000 Stars</p>
     <p id="ach2">🔒 Reach Level 10</p>
     <p id="ach3">🔒 Buy 10 Miners</p>
+
   </div>
 
   <!-- LEADERBOARD -->
   <div class="panel" id="leaderboard-section">
+
     <h3>🏆 Leaderboard</h3>
-    <div id="leaderboard">Loading...</div>
+
+    <div id="leaderboard">
+      Loading...
+    </div>
+
   </div>
 
 </div>
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav">
-  <a href="#" class="nav-btn" data-target="tap-section"><span>🏠</span>Home</a>
-  <a href="#" class="nav-btn" data-target="tasks-section"><span>📋</span>Tasks</a>
-  <a href="#" class="nav-btn" data-target="stats-section"><span>👥</span>Friends</a>
-  <a href="#" class="nav-btn" data-target="upgrades-section"><span>💰</span>Wallet</a>
-  <a href="#" class="nav-btn" data-target="leaderboard-section"><span>🏆</span>Top</a>
+
+  <a href="#" class="nav-btn">
+    <span>🏠</span>
+    Home
+  </a>
+
+  <a href="#" class="nav-btn">
+    <span>📋</span>
+    Tasks
+  </a>
+
+  <a href="#" class="nav-btn">
+    <span>👥</span>
+    Friends
+  </a>
+
+  <a href="#" class="nav-btn">
+    <span>💰</span>
+    Wallet
+  </a>
+
+  <a href="#" class="nav-btn">
+    <span>🏆</span>
+    Top
+  </a>
+
 </div>
 
 <script type="module" src="zerostars_app_final.js"></script>
+
 </body>
 </html>
