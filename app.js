@@ -25,8 +25,11 @@ let game = JSON.parse(localStorage.getItem("zerostars_save")) || {
 };
 
 let username = localStorage.getItem("username");
-if(!username){ username = prompt("Enter Username"); localStorage.setItem("username",username); }
 
+if(!username){
+  username = "Player_" + Math.floor(Math.random()*999999);
+  localStorage.setItem("username", username);
+}
 // Cloud Save
 async function loadCloudSave(){
   try{
@@ -93,9 +96,10 @@ function mineStar(e){
   createFloating("+"+gain,e.clientX||window.innerWidth/2,e.clientY||window.innerHeight/2);
   update();
 }
-starEl.addEventListener("click",mineStar);
-starEl.addEventListener("touchstart",mineStar);
-
+if(starEl){
+  starEl.addEventListener("click", mineStar);
+  starEl.addEventListener("touchstart", mineStar);
+}
 // Buttons
 const btnMap=[
   ["upgradeBtn",()=>{const cost=game.power*50;if(game.coins<cost)return alert("Not enough Stars");game.coins-=cost;game.power++;game.dailyMissions.upgrade1=true;update();}],
@@ -121,12 +125,39 @@ if(id===2 && !game.tasks.task2 && game.miners>=1){game.tasks.task2=true;game.coi
 if(id===3 && !game.tasks.task3 && game.level>=5){game.tasks.task3=true;game.coins+=500;} update();}
 window.claimTask=claimTask;
 
-function claimTelegramTask(){if(!game.tasks.telegram){game.tasks.telegram=true;game.coins+=500;update();}}
-window.claimTelegramTask=claimTelegramTask;
+function claimTelegramTask(){
 
-function claimTwitterTask(){if(!game.tasks.twitter){game.tasks.twitter=true;game.coins+=500;update();}}
-window.claimTwitterTask=claimTwitterTask;
+  if(game.tasks.telegram){
+    alert("Already Claimed");
+    return;
+  }
 
+  game.tasks.telegram = true;
+  game.coins += 500;
+
+  update();
+
+  alert("+500 Stars Added");
+}
+
+window.claimTelegramTask = claimTelegramTask;
+
+function claimTwitterTask(){
+
+  if(game.tasks.twitter){
+    alert("Already Claimed");
+    return;
+  }
+
+  game.tasks.twitter = true;
+  game.coins += 500;
+
+  update();
+
+  alert("+500 Stars Added");
+}
+
+window.claimTwitterTask = claimTwitterTask;
 function claimDailyMission(id){
   if(id===1 && game.dailyMissions.mine100===true){game.dailyMissions.mine100="claimed";game.coins+=300;}
   if(id===2 && game.dailyMissions.upgrade1===true){game.dailyMissions.upgrade1="claimed";game.coins+=500;}
@@ -147,7 +178,9 @@ async function connectWallet(){
     }catch(err){console.error(err); alert("Connection failed!");}
   }else{ alert("MetaMask not detected!"); }
 }
-walletBtn.addEventListener("click",connectWallet);
+if(walletBtn){
+  walletBtn.addEventListener("click", connectWallet);
+}
 
 // Live Leaderboard
 async function updateLeaderboard(){
