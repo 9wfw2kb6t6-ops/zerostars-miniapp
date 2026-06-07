@@ -25,6 +25,8 @@ let game = {
   power: storedGame.power ?? 1,
   miners: storedGame.miners ?? 0,
   referrals: storedGame.referrals ?? 0,
+  keys: storedGame.keys ?? 0,
+  boxesOpened: storedGame.boxesOpened ?? 0,
   referredBy: storedGame.referredBy ?? null,
   xpBoost: storedGame.xpBoost ?? false,
   doubleCoins: storedGame.doubleCoins ?? false,
@@ -38,7 +40,6 @@ if(!username){
   username = "Player_" + Math.floor(Math.random()*999999);
   localStorage.setItem("username", username);
 }
-const referralCode = username;
 
 // Cloud Save
 async function loadCloudSave(){
@@ -55,6 +56,8 @@ async function loadCloudSave(){
         miners: Math.max(game.miners, data.miners || 0),
         xp: Math.max(game.xp, data.xp || 0),
         energy: Math.max(game.energy, data.energy || 0),
+        keys: Math.max(game.keys, data.keys || 0),
+        boxesOpened: Math.max(game.boxesOpened, data.boxesOpened || 0),
         referrals: Math.max(game.referrals, data.referrals || 0),
         tasks: {...game.tasks, ...data.tasks},
         dailyMissions: {...game.dailyMissions, ...data.dailyMissions},
@@ -67,10 +70,9 @@ async function loadCloudSave(){
 }
 
 async function saveCloud(){ try{ await setDoc(doc(db,"players",username),game);} catch(err){console.error(err);} }
-
 function save(){ localStorage.setItem("zerostars_save",JSON.stringify(game)); saveCloud(); }
 
-// DOM Elements
+// DOM
 const coinsEl=document.getElementById("coins");
 const levelEl=document.getElementById("level");
 const xpText=document.getElementById("xpText");
@@ -83,6 +85,7 @@ const starEl=document.getElementById("star");
 const walletBtn=document.getElementById("connectWalletBtn");
 const walletAddr=document.getElementById("walletAddress");
 const refCountEl=document.getElementById("refCount");
+const keyCountEl=document.getElementById("keyCount");
 
 // Update UI
 function update(){
@@ -94,15 +97,12 @@ function update(){
   xpText.textContent=`${game.xp} / ${maxXp}`;
   xpFill.style.width=Math.min((game.xp/maxXp*100),100)+"%";
   
-  energyText.textContent = game.energy; // نمایش انرژی واقعی
-  energyFill.style.width = Math.min((game.energy/500)*100,100)+"%"; // مقیاس نوار انرژی
+  energyText.textContent = game.energy;
+  energyFill.style.width = Math.min((game.energy/500)*100,100)+"%";
 
   if(refCountEl) refCountEl.textContent = `Referrals: ${game.referrals || 0}`;
+  if(keyCountEl) keyCountEl.textContent = game.keys || 0;
 
-  // Achievements
-  if(game.coins>=1000 && !game.achievements.stars1000){game.achievements.stars1000=true; document.getElementById("ach1").innerHTML="✅ Reach 1000 Stars"; game.coins+=500;}
-  if(game.level>=10 && !game.achievements.level10){game.achievements.level10=true; document.getElementById("ach2").innerHTML="✅ Reach Level 10"; game.coins+=1000;}
-  if(game.miners>=10 && !game.achievements.miners10){game.achievements.miners10=true; document.getElementById("ach3").innerHTML="✅ Buy 10 Miners"; game.coins+=1500;}
   save();
 }
 
@@ -115,7 +115,7 @@ function createFloating(text,x,y){
   setTimeout(()=>div.remove(),1000);
 }
 
-// Star Click / Touch
+// Star Click
 function mineStar(e){
   e.preventDefault();
   if(game.energy<=0) return;
@@ -135,47 +135,19 @@ if(starEl){
 
 // Buttons
 const btnMap=[
-  ["upgradeBtn",()=>{const cost=game.power*50;if(game.coins<cost)return alert("Not enough Stars");game.coins-=cost;game.power++;game.dailyMissions.upgrade1=true;update();}],
+  ["upgradeBtn",()=>{const cost=game.power*50;if(game.coins<cost)return alert("Not enough Stars");game.coins-=cost;game.power++;update();}],
   ["minerBtn",()=>{const cost=(game.miners+1)*100;if(game.coins<cost)return alert("Not enough Stars");game.coins-=cost;game.miners++;update();}],
-  ["dailyBtn",()=>{const today=new Date().toDateString();if(localStorage.getItem("zs_daily")===today)return alert("Already Claimed");localStorage.setItem("zs_daily",today);game.coins+=500;game.dailyMissions.dailyReward=true;update();}],
+  ["dailyBtn",()=>{const today=new Date().toDateString();if(localStorage.getItem("zs_daily")===today)return alert("Already Claimed");localStorage.setItem("zs_daily",today);game.coins+=500;update();}],
   ["boostBtn",()=>{if(game.coins<500)return alert("Need 500 Stars");game.coins-=500;game.xpBoost=true;update();}],
   ["energyBoostBtn",()=>{if(game.coins<300)return alert("Need 300 Stars"); game.coins-=300; game.energy+=100; update();}],
   ["doubleCoinsBtn",()=>{if(game.coins<1000)return alert("Need 1000 Stars");game.coins-=1000;game.doubleCoins=true;update();}]
 ];
 btnMap.forEach(([id,fn])=>{
   const el=document.getElementById(id);
-  if(el){
-    el.addEventListener("click",fn);
-    el.addEventListener("touchstart",e=>{e.preventDefault();fn();});
-  }
+  if(el){el.addEventListener("click",fn); el.addEventListener("touchstart",e=>{e.preventDefault();fn();});}
 });
 
-// Auto Energy / Miner
-setInterval(()=>{
-  if(game.energy<100){game.energy+=5;if(game.energy>100)game.energy=100;update();}
-},3000);
-setInterval(()=>{
-  if(game.miners>0){
-    game.coins+=game.miners; game.xp+=game.miners;
-    while(game.xp>=game.level*100){ game.xp-=game.level*100; game.level++; }
-    update();
-  }
-},1000);
-
-// Referral
-function copyReferral() {
-  const link = window.location.origin + window.location.pathname + "?ref=" + username;
-
-  if (navigator.share) {
-    navigator.share({ title: "ZeroStars", text: "Join ZeroStars and earn rewards!", url: link })
-      .catch(err => console.log("Share cancelled or not supported"));
-  } else {
-    navigator.clipboard.writeText(link);
-    alert("Referral Link Copied:\n" + link);
-  }
-}
-window.copyReferral = copyReferral;
-
+// Referral & Key system
 async function processReferral(){
   const params = new URLSearchParams(window.location.search);
   const ref = params.get("ref");
@@ -187,6 +159,9 @@ async function processReferral(){
       let refData = refDoc.data();
       refData.coins = (refData.coins || 0) + 500;
       refData.referrals = (refData.referrals || 0) + 1;
+      if(refData.referrals % 20 === 0){
+        refData.keys = (refData.keys || 0) + 1;
+      }
       await setDoc(doc(db,"players",ref), refData);
       game.coins += 250;
       game.referredBy = ref;
@@ -196,60 +171,33 @@ async function processReferral(){
   } catch(err){ console.error(err); }
 }
 
-// Tasks
-function claimTask(id){if(id===1 && !game.tasks.task1 && game.coins>=100){game.tasks.task1=true;game.coins+=50;}
-if(id===2 && !game.tasks.task2 && game.miners>=1){game.tasks.task2=true;game.coins+=150;}
-if(id===3 && !game.tasks.task3 && game.level>=5){game.tasks.task3=true;game.coins+=500;} update();}
-window.claimTask=claimTask;
-
-function claimTelegramTask(){
-  if(game.tasks.telegram){ alert("Already Claimed"); return; }
-  window.open('https://t.me/zeroStarsuru','_blank');
-  game.tasks.telegram=true;
-  game.coins+=500;
+// Open Box
+function openRewardBox(){
+  if(!game.keys || game.keys < 1){
+    alert("You need at least 1 Key to open this box!");
+    return;
+  }
+  game.keys -= 1;
+  game.boxesOpened += 1;
+  const rewards = [0.001,0.002,0.003,0.005,0.01];
+  const reward = rewards[Math.floor(Math.random() * rewards.length)];
+  alert(`🎁 Congratulations! You won ${reward} SOL!`);
   update();
 }
-window.claimTelegramTask=claimTelegramTask;
-
-function claimTwitterTask(){
-  if(game.tasks.twitter){ alert("Already Claimed"); return; }
-  window.open('https://x.com/Zerostartsuru','_blank');
-  game.tasks.twitter=true;
-  game.coins+=500;
-  update();
-}
-window.claimTwitterTask=claimTwitterTask;
+window.openRewardBox = openRewardBox;
 
 // Wallet Connect
 async function connectWallet(){
   if(typeof window.ethereum!=="undefined"){
     try{
       const accounts = await window.ethereum.request({method:"eth_requestAccounts"});
-      const account = accounts[0];
-      walletAddr.textContent=`Connected: ${account}`;
-      game.wallet=account;
+      walletAddr.textContent=`Connected: ${accounts[0]}`;
+      game.wallet=accounts[0];
       save();
     }catch(err){console.error(err); alert("Connection failed!");}
   } else { alert("MetaMask not detected!"); }
 }
 if(walletBtn) { walletBtn.addEventListener("click", connectWallet); }
-
-// Live Leaderboard
-async function updateLeaderboard(){
-  const board=document.getElementById("leaderboard");
-  try{
-    const snap=await getDocs(collection(db,"players"));
-    let players=[];
-    snap.forEach(docSnap=>{ const data=docSnap.data(); players.push({username:docSnap.id,coins:data.coins||0,level:data.level||1}); });
-    players.sort((a,b)=>b.coins-a.coins);
-    board.innerHTML="<h3>🏆 Top Players</h3>";
-    players.slice(0,10).forEach((p,i)=>{
-      const div=document.createElement("div");
-      div.textContent=`#${i+1} ${p.username} - ${p.coins} ⭐ | Lv.${p.level}`;
-      board.appendChild(div);
-    });
-  }catch(err){ board.innerHTML="Failed to load leaderboard."; console.error(err);}
-}
 
 // Init
 (async () => {
@@ -257,12 +205,5 @@ async function updateLeaderboard(){
     await loadCloudSave();
     await processReferral();
     update();
-    updateLeaderboard();
-    setInterval(updateLeaderboard,5000);
-  } catch(err) {
-    console.error(err);
-    update();
-    updateLeaderboard();
-    setInterval(updateLeaderboard,5000);
-  }
+  } catch(err){ console.error(err); update(); }
 })();
