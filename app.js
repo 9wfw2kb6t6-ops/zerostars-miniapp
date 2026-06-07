@@ -24,8 +24,9 @@ let game = JSON.parse(localStorage.getItem("zerostars_save")) || {
   achievements:{stars1000:false,level10:false,miners10:false}
 };
 
-let username = localStorage.getItem("username");
-if(!username){ username = prompt("Enter Username"); localStorage.setItem("username",username); }
+let username =
+localStorage.getItem("username") ||
+("Player_" + Math.floor(Math.random()*100000));
 
 // Cloud Save
 async function loadCloudSave(){
