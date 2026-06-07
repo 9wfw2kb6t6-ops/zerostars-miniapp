@@ -214,9 +214,46 @@ async function updateLeaderboard(){
     });
   }catch(err){ board.innerHTML="Failed to load leaderboard."; console.error(err);}
 }
+async function processReferral(){
 
+  const params = new URLSearchParams(window.location.search);
+  const ref = params.get("ref");
+
+  if(!ref) return;
+
+  if(ref === username) return;
+
+  if(game.referredBy) return;
+
+  try{
+
+    const refDoc = await getDoc(doc(db,"players",ref));
+
+    if(refDoc.exists()){
+
+      let refData = refDoc.data();
+
+      refData.coins = (refData.coins || 0) + 500;
+      refData.referrals = (refData.referrals || 0) + 1;
+
+      await setDoc(doc(db,"players",ref),refData);
+
+      game.coins += 250;
+      game.referredBy = ref;
+
+      save();
+
+      alert("Referral bonus received!");
+
+    }
+
+  }catch(err){
+    console.error(err);
+  }
+}
 // Init
 loadCloudSave();
+processReferral();
 updateLeaderboard();
 setInterval(updateLeaderboard,5000);
 update();
