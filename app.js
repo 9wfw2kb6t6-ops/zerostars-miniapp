@@ -14,10 +14,13 @@ game.tasks || {
 
 task1:false,
 task2:false,
-task3:false
+task3:false,
 
+telegram:false,
+twitter:false
+  
 };
-};
+
 let username =
 localStorage.getItem("username") ||
 prompt("Enter Username");
