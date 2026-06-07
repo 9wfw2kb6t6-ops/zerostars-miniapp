@@ -39,6 +39,20 @@ let game = {
 let username = localStorage.getItem("username");
 if(!username){
   username = "Player_" + Math.floor(Math.random()*999999);
+ function copyReferral(){
+
+  const link =
+    window.location.origin +
+    window.location.pathname +
+    "?ref=" +
+    username;
+
+  navigator.clipboard.writeText(link);
+
+  alert("Referral Link Copied!");
+}
+
+window.copyReferral = copyReferral;
   localStorage.setItem("username", username);
 }
 
@@ -113,6 +127,15 @@ function update(){
   energyText.textContent = game.energy;
   energyFill.style.width = Math.min((game.energy/500)*100,100)+"%";
   if(refCountEl) refCountEl.textContent = `Referrals: ${game.referrals || 0}`;
+const referralInput = document.getElementById("referralLink");
+
+if(referralInput){
+  referralInput.value =
+    window.location.origin +
+    window.location.pathname +
+    "?ref=" +
+    username;
+}
   if(keyCountEl) keyCountEl.textContent = game.keys || 0;
   save();
 }
