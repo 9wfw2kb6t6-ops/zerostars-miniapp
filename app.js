@@ -4,7 +4,9 @@ import {
 getFirestore,
 doc,
 setDoc,
-getDoc
+getDoc,
+getDocs,
+collection
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -20,12 +22,8 @@ measurementId: "G-VYWB3L69PK"
 
 };
 
-const app =
-initializeApp(firebaseConfig);
-
-const db =
-getFirestore(app);
-
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 let game = JSON.parse(
 localStorage.getItem("zerostars_save")
@@ -37,27 +35,39 @@ xp:0,
 energy:100,
 power:1,
 miners:0,
-xpBoost:false
 
-};
+xpBoost:false,
+doubleCoins:false,
 
-game.tasks = game.tasks || {
-
+tasks:{
 task1:false,
 task2:false,
 task3:false,
 telegram:false,
 twitter:false
+},
+
+dailyMissions:{
+mine100:false,
+upgrade1:false,
+dailyReward:false
+},
+
+achievements:{
+stars1000:false,
+level10:false,
+miners10:false
+}
 
 };
+
 let username =
 localStorage.getItem("username");
 
 if(!username){
 
-username = prompt(
-"Enter Username"
-);
+username =
+prompt("Enter Username");
 
 localStorage.setItem(
 "username",
@@ -68,25 +78,26 @@ username
 
 async function loadCloudSave(){
 
-const ref =
-doc(
-db,
-"players",
-username
-);
+try{
 
-const snap =
-await getDoc(ref);
+const snap = await getDoc(
+doc(db,"players",username)
+);
 
 if(snap.exists()){
 
-game = snap.data();
+game = {
+...game,
+...snap.data()
+};
 
 update();
 
-console.log(
-"Cloud Save Loaded"
-);
+}
+
+}catch(err){
+
+console.log(err);
 
 }
 
@@ -94,87 +105,21 @@ console.log(
 
 async function saveCloud(){
 
+try{
+
 await setDoc(
-doc(
-db,
-"players",
-username
-),
+doc(db,"players",username),
 game
 );
 
+}catch(err){
+
+console.log(err);
+
 }
 
-loadCloudSave();
-
-const coinsEl =
-document.getElementById("coins");
-
-const levelEl =
-document.getElementById("level");
-
-const xpEl =
-document.getElementById("xp");
-
-const energyFill =
-document.getElementById("energyFill");
-
-const energyText =
-document.getElementById("energyText");
-
-const powerEl =
-document.getElementById("power");
-
-const minersEl =
-document.getElementById("miners");
-
-function save(){
-
-localStorage.setItem(
-"zerostars_save",
-JSON.stringify(game)
-);
-async function loadCloudSave(){
-  const ref = doc(db,"players",username);
-  const snap = await getDoc(ref);
-  if(snap.exists()){
-    game = snap.data();
-    update();
-  }
 }
 
-async function saveCloud(){
-  await setDoc(doc(db,"players",username), game);
-}
-
-loadCloudSave();
-  
-}
-
-function update(){
-
-coinsEl.textContent =
-game.coins;
-
-levelEl.textContent =
-game.level;
-
-xpEl.textContent =
-game.xp;
-
-powerEl.textContent =
-game.power;
-
-minersEl.textContent =
-game.miners;
-
-energyText.textContent =
-game.energy + " / 100";
-
-energyFill.style.width =
-game.energy + "%";
-
-save();
 function save(){
 
 localStorage.setItem(
@@ -186,330 +131,222 @@ saveCloud();
 
 }
 
-  
+// ==============================
+// Game Functions, Clicks, Tasks, Shop
+// ==============================
+
+const coinsEl = document.getElementById("coins");
+const levelEl = document.getElementById("level");
+const xpText = document.getElementById("xpText");
+const xpFill = document.getElementById("xpFill");
+const energyFill = document.getElementById("energyFill");
+const energyText = document.getElementById("energyText");
+const powerEl = document.getElementById("power");
+const minersEl = document.getElementById("miners");
+
+function update() {
+  coinsEl.textContent = game.coins;
+  levelEl.textContent = game.level;
+  powerEl.textContent = game.power;
+  minersEl.textContent = game.miners;
+
+  const maxXp = game.level * 100;
+  xpText.textContent = game.xp + " / " + maxXp;
+  xpFill.style.width = (game.xp / maxXp * 100) + "%";
+
+  energyText.textContent = game.energy + " / 100";
+  energyFill.style.width = game.energy + "%";
+
+  // Achievements
+  if (game.coins >= 1000 && !game.achievements.stars1000) {
+    game.achievements.stars1000 = true;
+    document.getElementById("ach1").innerHTML = "✅ Reach 1000 Stars";
+    game.coins += 500;
+  }
+  if (game.level >= 10 && !game.achievements.level10) {
+    game.achievements.level10 = true;
+    document.getElementById("ach2").innerHTML = "✅ Reach Level 10";
+    game.coins += 1000;
+  }
+  if (game.miners >= 10 && !game.achievements.miners10) {
+    game.achievements.miners10 = true;
+    document.getElementById("ach3").innerHTML = "✅ Buy 10 Miners";
+    game.coins += 1500;
+  }
+
+  save();
 }
 
-document
-.getElementById("star")
-.addEventListener("click",()=>{
+document.getElementById("star").addEventListener("click", () => {
+  if (game.energy <= 0) return;
 
-if(game.energy <= 0)
-return;
+  let gain = game.power;
+  if (game.xpBoost) gain *= 2;
+  if (game.doubleCoins) gain *= 2;
 
-let gain =
-game.power;
+  game.coins += gain;
+  game.xp += gain;
+  game.energy--;
 
-if(game.xpBoost)
-gain *= 2;
+  if (game.coins >= 100) game.dailyMissions.mine100 = true;
 
-game.coins += gain;
-game.xp += gain;
+  if (game.xp >= game.level * 100) {
+    game.xp -= game.level * 100;
+    game.level++;
+  }
 
-game.energy--;
-
-if(
-game.xp >= game.level * 100
-){
-
-game.xp = 0;
-game.level++;
-
-alert(
-"🎉 Level Up! " +
-game.level
-);
-
-}
-
-update();
-
+  update();
 });
 
-document
-.getElementById("upgradeBtn")
-.onclick = ()=>{
-
-const cost =
-game.power * 50;
-
-if(game.coins < cost){
-
-alert(
-"Not enough Stars"
-);
-
-return;
-
-}
-
-game.coins -= cost;
-
-game.power++;
-
-update();
-
+document.getElementById("upgradeBtn").onclick = () => {
+  const cost = game.power * 50;
+  if (game.coins < cost) return alert("Not enough Stars");
+  game.coins -= cost;
+  game.power++;
+  game.dailyMissions.upgrade1 = true;
+  update();
 };
 
-document
-.getElementById("minerBtn")
-.onclick = ()=>{
-
-const cost =
-(game.miners + 1) * 100;
-
-if(game.coins < cost){
-
-alert(
-"Not enough Stars"
-);
-
-return;
-
-}
-
-game.coins -= cost;
-
-game.miners++;
-
-update();
-
+document.getElementById("minerBtn").onclick = () => {
+  const cost = (game.miners + 1) * 100;
+  if (game.coins < cost) return alert("Not enough Stars");
+  game.coins -= cost;
+  game.miners++;
+  update();
 };
 
-document
-.getElementById("dailyBtn")
-.onclick = ()=>{
-
-const today =
-new Date()
-.toDateString();
-
-if(
-localStorage.getItem(
-"zs_daily"
-) === today
-){
-
-alert(
-"Already Claimed"
-);
-
-return;
-
-}
-
-localStorage.setItem(
-"zs_daily",
-today
-);
-
-game.coins += 500;
-
-alert(
-"🎁 +500 Stars"
-);
-
-update();
-
+document.getElementById("dailyBtn").onclick = () => {
+  const today = new Date().toDateString();
+  if (localStorage.getItem("zs_daily") === today) return alert("Already Claimed");
+  localStorage.setItem("zs_daily", today);
+  game.coins += 500;
+  game.dailyMissions.dailyReward = true;
+  update();
 };
 
-setInterval(()=>{
+document.getElementById("boostBtn").onclick = () => {
+  if (game.coins < 500) return alert("Need 500 Stars");
+  game.coins -= 500;
+  game.xpBoost = true;
+  update();
+};
 
-if(game.energy < 100){
+document.getElementById("energyBoostBtn").onclick = () => {
+  if (game.coins < 300) return alert("Need 300 Stars");
+  game.coins -= 300;
+  game.energy = 100;
+  update();
+};
 
-game.energy += 5;
+document.getElementById("doubleCoinsBtn").onclick = () => {
+  if (game.coins < 1000) return alert("Need 1000 Stars");
+  game.coins -= 1000;
+  game.doubleCoins = true;
+  update();
+};
 
-if(game.energy > 100){
+// Auto Energy & Miner
+setInterval(() => {
+  if (game.energy < 100) {
+    game.energy += 5;
+    if (game.energy > 100) game.energy = 100;
+    update();
+  }
+}, 3000);
 
-game.energy = 100;
+setInterval(() => {
+  if (game.miners > 0) {
+    game.coins += game.miners;
+    game.xp += game.miners;
+    update();
+  }
+}, 1000);
 
+// Tasks
+function claimTask(id) {
+  if (id === 1 && !game.tasks.task1 && game.coins >= 100) {
+    game.tasks.task1 = true;
+    game.coins += 50;
+  }
+  if (id === 2 && !game.tasks.task2 && game.miners >= 1) {
+    game.tasks.task2 = true;
+    game.coins += 150;
+  }
+  if (id === 3 && !game.tasks.task3 && game.level >= 5) {
+    game.tasks.task3 = true;
+    game.coins += 500;
+  }
+  update();
 }
+window.claimTask = claimTask;
 
-update();
-
+function claimTelegramTask() {
+  if (!game.tasks.telegram) {
+    game.tasks.telegram = true;
+    game.coins += 500;
+    update();
+  }
 }
+window.claimTelegramTask = claimTelegramTask;
 
-},3000);
-
-setInterval(()=>{
-
-if(game.miners > 0){
-
-game.coins += game.miners;
-
-game.xp += game.miners;
-
-if(
-game.xp >= game.level * 100
-){
-
-game.xp = 0;
-game.level++;
-
+function claimTwitterTask() {
+  if (!game.tasks.twitter) {
+    game.tasks.twitter = true;
+    game.coins += 500;
+    update();
+  }
 }
+window.claimTwitterTask = claimTwitterTask;
 
-update();
-
+function claimDailyMission(id) {
+  if (id === 1 && game.dailyMissions.mine100 === true) {
+    game.dailyMissions.mine100 = "claimed";
+    game.coins += 300;
+  }
+  if (id === 2 && game.dailyMissions.upgrade1 === true) {
+    game.dailyMissions.upgrade1 = "claimed";
+    game.coins += 500;
+  }
+  if (id === 3 && game.dailyMissions.dailyReward === true) {
+    game.dailyMissions.dailyReward = "claimed";
+    game.coins += 200;
+  }
+  update();
 }
+window.claimDailyMission = claimDailyMission;
 
-},1000);
-
-function claimTask(id){
-
-if(id === 1){
-
-if(game.coins < 100)
-return alert(
-"Need 100 Stars"
-);
-
-if(game.tasks.task1)
-return;
-
-game.tasks.task1 = true;
-
-game.coins += 50;
-
-alert(
-"Task Completed +50"
-);
-
-}
-
-if(id === 2){
-
-if(game.miners < 1)
-return alert(
-"Buy a Miner First"
-);
-
-if(game.tasks.task2)
-return;
-
-game.tasks.task2 = true;
-
-game.coins += 150;
-
-alert(
-"Task Completed +150"
-);
-
-}
-
-if(id === 3){
-
-if(game.level < 5)
-return alert(
-"Reach Level 5"
-);
-
-if(game.tasks.task3)
-return;
-
-game.tasks.task3 = true;
-
-game.coins += 500;
-
-alert(
-"Task Completed +500"
-);
-
-}
-
-update();
-
-}
-
-function claimTelegramTask(){
-
-if(game.tasks.telegram){
-
-alert(
-"Already Claimed"
-);
-
-return;
-
-}
-
-game.tasks.telegram = true;
-
-game.coins += 500;
-
-alert(
-"📢 Telegram Reward +500"
-);
-
-update();
-
-}
-
-function claimTwitterTask(){
-
-if(game.tasks.twitter){
-
-alert(
-"Already Claimed"
-);
-
-return;
-
-}
-
-game.tasks.twitter = true;
-
-game.coins += 500;
-
-alert(
-"🐦 X Reward +500"
-);
-
-update();
-
-}
-
-update();
 // ==============================
 // Live Leaderboard
 // ==============================
 
 async function updateLeaderboard() {
-  const leaderboardEl = document.getElementById("leaderboard");
-  
+  const board = document.getElementById("leaderboard");
   try {
-    const playersSnapshot = await getDocs(
-      collection(db, "players")
-    );
-
-    // ساخت آرایه‌ای از بازیکن‌ها
-    const players = [];
-    playersSnapshot.forEach(docSnap => {
+    const snap = await getDocs(collection(db, "players"));
+    let players = [];
+    snap.forEach((docSnap) => {
       const data = docSnap.data();
       players.push({
         username: docSnap.id,
         coins: data.coins || 0,
-        level: data.level || 1
+        level: data.level || 1,
       });
     });
-
-    // مرتب‌سازی بر اساس Coins (Descending)
-    players.sort((a,b) => b.coins - a.coins);
-
-    // نمایش 10 نفر اول
-    leaderboardEl.innerHTML = "<h3>🏆 Top Players</h3>";
-    players.slice(0,10).forEach(p => {
+    players.sort((a, b) => b.coins - a.coins);
+    board.innerHTML = "<h3>🏆 Top Players</h3>";
+    players.slice(0, 10).forEach((p, i) => {
       const div = document.createElement("div");
-      div.textContent = `${p.username} - ${p.coins} Stars (Level ${p.level})`;
-      leaderboardEl.appendChild(div);
+      div.textContent = `#${i + 1} ${p.username} - ${p.coins} ⭐ | Lv.${p.level}`;
+      board.appendChild(div);
     });
-
-  } catch(e) {
-    console.error("Leaderboard Error:", e);
-    leaderboardEl.textContent = "Failed to load leaderboard.";
+  } catch (err) {
+    board.innerHTML = "Failed to load leaderboard.";
+    console.error(err);
   }
 }
 
-// هر 5 ثانیه به‌روزرسانی Leaderboard
-setInterval(updateLeaderboard,5000);
-
-// بارگذاری اولیه
+// Initialize
+loadCloudSave();
 updateLeaderboard();
+setInterval(updateLeaderboard, 5000);
+update();
