@@ -55,8 +55,9 @@ async function loadCloudSave(){
         miners: Math.max(game.miners, data.miners || 0)
       };
     }
-  } catch(err){ console.error(err); }
-  finally { update(); }
+  } catch(err){
+  console.error(err);
+}
 }
 
 async function saveCloud(){ 
