@@ -326,9 +326,7 @@ function claimTask(id){
 if(id === 1){
 
 if(game.coins < 100)
-return alert(
-"Need 100 Stars"
-);
+return alert("Need 100 Stars");
 
 if(game.tasks.task1)
 return;
@@ -337,18 +335,14 @@ game.tasks.task1 = true;
 
 game.coins += 50;
 
-alert(
-"Task Completed! +50"
-);
+alert("Task Completed! +50");
 
 }
 
 if(id === 2){
 
 if(game.miners < 1)
-return alert(
-"Buy a Miner First"
-);
+return alert("Buy a Miner First");
 
 if(game.tasks.task2)
 return;
@@ -357,18 +351,14 @@ game.tasks.task2 = true;
 
 game.coins += 150;
 
-alert(
-"Task Completed! +150"
-);
+alert("Task Completed! +150");
 
 }
 
 if(id === 3){
 
 if(game.level < 5)
-return alert(
-"Reach Level 5"
-);
+return alert("Reach Level 5");
 
 if(game.tasks.task3)
 return;
@@ -377,11 +367,14 @@ game.tasks.task3 = true;
 
 game.coins += 500;
 
-alert(
-"Task Completed! +500"
-);
+alert("Task Completed! +500");
 
 }
+
+update();
+
+}
+
 function claimTelegramTask(){
 
 if(game.tasks.telegram){
@@ -415,7 +408,5 @@ alert("🐦 X Reward +500");
 update();
 
 }
-update();
 
-}
 update();
