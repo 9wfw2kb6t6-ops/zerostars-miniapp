@@ -160,81 +160,63 @@ transition:.3s;
 
 }
 
-/* ==============================
-TAP SECTION
-============================== */
-
 .tap-section{
-text-align:center;
-margin:20px 0 30px;
+    text-align:center;
+    margin:30px 0;
 }
 
 .star{
-width:170px;
-height:170px;
+    width:180px;
+    height:180px;
+    margin:0 auto;
 
-```
-margin:0 auto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
-display:flex;
-justify-content:center;
-align-items:center;
+    border-radius:50%;
 
-border-radius:50%;
-
-background:
+    background:
     radial-gradient(
         circle,
-        rgba(255,215,0,.20),
+        rgba(255,215,0,.25),
         rgba(255,215,0,.08),
         transparent 75%
     );
 
-cursor:pointer;
-```
-
+    cursor:pointer;
 }
 
 .main-logo{
-width:105px;
-height:105px;
+    width:120px;
+    height:120px;
 
-```
-object-fit:cover;
+    object-fit:cover;
+    border-radius:50%;
 
-border-radius:50%;
+    border:3px solid rgba(255,215,0,.4);
 
-border:3px solid rgba(255,215,0,.45);
+    background:#000;
 
-background:#000;
+    box-shadow:
+    0 0 20px rgba(255,215,0,.6),
+    0 0 50px rgba(255,215,0,.2);
 
-box-shadow:
-    0 0 12px rgba(255,215,0,.55),
-    0 0 30px rgba(255,215,0,.25);
-
-transition:.15s ease;
-```
-
+    transition:.15s;
 }
 
 .star:active .main-logo{
-transform:scale(.92);
+    transform:scale(.9);
 }
 
 .tap-text{
-margin-top:12px;
-
-```
-color:#facc15;
-
-font-size:13px;
-
-font-weight:700;
-
-letter-spacing:2px;
-```
-
+    margin-top:16px;
+    color:#facc15;
+    font-size:18px;
+    font-weight:800;
+    letter-spacing:4px;
 }
+
 
 /* ==============================
 PLAYER STATS
@@ -458,4 +440,73 @@ MOBILE
 }
 ```
 
+}
+.panel{
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(250,204,21,.15);
+
+    border-radius:28px;
+
+    padding:20px;
+
+    backdrop-filter:blur(20px);
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.4);
+}
+
+.top-card{
+    background:
+    linear-gradient(
+    135deg,
+    rgba(250,204,21,.12),
+    rgba(0,0,0,.3)
+    );
+
+    border:1px solid rgba(250,204,21,.2);
+}
+
+.bar{
+    width:100%;
+    height:18px;
+
+    background:#111827;
+
+    border-radius:999px;
+
+    overflow:hidden;
+}
+
+#xpFill{
+    background:
+    linear-gradient(
+    90deg,
+    #f59e0b,
+    #facc15
+    );
+
+    height:100%;
+}
+
+#energyFill{
+    background:
+    linear-gradient(
+    90deg,
+    #22c55e,
+    #4ade80
+    );
+
+    height:100%;
+}
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.mini-card{
+    background:rgba(255,255,255,.05);
+    border-radius:20px;
+    padding:18px;
 }
