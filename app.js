@@ -320,7 +320,12 @@ window.claimDailyMission = claimDailyMission;
 // ==============================
 
 async function updateLeaderboard() {
-  const board = document.getElementById("leaderboard");
+const board = document.getElementById("leaderboard");
+
+if(!board){
+console.log("Leaderboard Not Found");
+return;
+}
   try {
     const snap = await getDocs(collection(db, "players"));
     let players = [];
@@ -350,3 +355,4 @@ loadCloudSave();
 updateLeaderboard();
 setInterval(updateLeaderboard, 5000);
 update();
+alert("APP LOADED");
