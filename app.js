@@ -283,8 +283,9 @@ async function processReferral(){
   }
 }
 // Init
-loadCloudSave();
-processReferral();
+loadCloudSave().then(() => {
+  update();
+});
+
 updateLeaderboard();
 setInterval(updateLeaderboard,5000);
-update();
