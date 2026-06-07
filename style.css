@@ -419,3 +419,9 @@ img{
 .star{
     margin:15px auto;
 }
+.tap-text{
+    font-size:14px;
+    letter-spacing:2px;
+    opacity:.7;
+    margin-top:10px;
+}
