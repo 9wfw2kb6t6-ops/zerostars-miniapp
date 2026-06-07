@@ -1,510 +1,461 @@
 /* ==============================
-   Reset & Base
+RESET
 ============================== */
+
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
 html,
 body{
-  width:100%;
-  min-height:100%;
-  overflow-x:hidden;
+width:100%;
+min-height:100%;
+overflow-x:hidden;
 }
 
 body{
-  background:
-    radial-gradient(circle at top,#0f172a 0%,#020617 70%);
-  color:#fff;
-  font-family:Arial,sans-serif;
-  text-align:center;
+background:
+radial-gradient(circle at top,#1a1200 0%,#050505 70%);
+color:#ffffff;
+font-family:Arial,sans-serif;
+text-align:center;
 }
 
 /* ==============================
-   Container
+CONTAINER
 ============================== */
+
 .container{
-  width:100%;
-  max-width:650px;
-  margin:auto;
-  padding:15px;
+width:100%;
+max-width:650px;
+margin:auto;
+padding:15px;
+padding-bottom:90px;
 }
 
 /* ==============================
-   Cards
+CARDS
 ============================== */
+
 .top-card,
 .panel{
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(18px);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:28px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:
-    0 8px 35px rgba(0,0,0,.45);
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,215,0,.12);
+backdrop-filter:blur(15px);
+
+```
+border-radius:24px;
+
+padding:20px;
+
+margin-bottom:18px;
+
+box-shadow:
+    0 8px 30px rgba(0,0,0,.45);
+```
+
 }
 
 .top-card h1{
-  font-size:48px;
-  font-weight:800;
-  color:#facc15;
-  margin-bottom:10px;
+color:#facc15;
+font-size:42px;
+margin-bottom:8px;
 }
 
 .top-card p{
-  color:#cbd5e1;
-  margin-bottom:20px;
+color:#cbd5e1;
 }
 
 /* ==============================
-   Stats
+STATS
 ============================== */
+
+.stats-row,
 .stats{
-  display:flex;
-  gap:15px;
+display:flex;
+gap:12px;
 }
 
 .stat{
-  flex:1;
-  padding:22px;
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
+flex:1;
+
+```
+background:rgba(255,255,255,.04);
+
+border-radius:18px;
+
+padding:18px;
+```
+
 }
 
 .stat p{
-  color:#d1d5db;
-  font-size:18px;
+color:#d1d5db;
+font-size:14px;
 }
 
 .stat h2{
-  margin-top:10px;
-  font-size:48px;
-  font-weight:800;
+margin-top:8px;
+font-size:32px;
+color:#facc15;
 }
 
 /* ==============================
-   Logo
+XP / ENERGY
 ============================== */
-.star{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:10px;
-  margin:25px auto;
-  overflow:hidden;
-  cursor:pointer;
+
+.label-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
 }
 
-.logo-img{
-  width:160px;
-  height:160px;
-  max-width:100%;
-  object-fit:cover;
-
-  border-radius:28px;
-
-  box-shadow:
-    0 0 25px rgba(255,215,0,.5),
-    0 0 70px rgba(255,215,0,.25);
-
-  animation:pulse 2s infinite;
-  transition:.15s;
-}
-
-.star:active .logo-img{
-  transform:scale(.92);
-}
-
-@keyframes pulse{
-  0%{
-    transform:scale(1);
-  }
-
-  50%{
-    transform:scale(1.05);
-  }
-
-  100%{
-    transform:scale(1);
-  }
-}
-
-/* ==============================
-   XP & Energy
-============================== */
 .bar{
-  width:100%;
-  height:22px;
-  background:#0f172a;
-  border-radius:999px;
-  overflow:hidden;
-  margin-top:12px;
+width:100%;
+height:18px;
+
+```
+background:#111827;
+
+border-radius:999px;
+
+overflow:hidden;
+```
+
 }
 
 #xpFill{
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  background:linear-gradient(
-    90deg,
-    #f59e0b,
-    #facc15
-  );
-  transition:.3s;
+height:100%;
+width:0%;
+
+```
+background:
+    linear-gradient(
+        90deg,
+        #f59e0b,
+        #facc15
+    );
+
+transition:.3s;
+```
+
 }
 
 #energyFill{
-  height:100%;
-  width:100%;
-  border-radius:999px;
-  background:linear-gradient(
-    90deg,
-    #22c55e,
-    #4ade80
-  );
-  transition:.3s;
-}
+height:100%;
+width:100%;
 
-#xpText,
-#energyText{
-  margin-top:10px;
-  font-size:18px;
-}
+```
+background:
+    linear-gradient(
+        90deg,
+        #22c55e,
+        #4ade80
+    );
 
-/* ==============================
-   Buttons
-============================== */
-button{
-  width:100%;
-  border:none;
-  padding:15px;
-  margin-top:12px;
+transition:.3s;
+```
 
-  border-radius:16px;
-
-  font-size:17px;
-  font-weight:700;
-  color:white;
-
-  background:linear-gradient(
-    90deg,
-    #2563eb,
-    #3b82f6
-  );
-
-  cursor:pointer;
-  transition:.15s;
-}
-
-button:active{
-  transform:scale(.97);
-}
-
-button:hover{
-  opacity:.95;
 }
 
 /* ==============================
-   Wallet
+TAP SECTION
 ============================== */
-#walletAddress{
-  margin-top:15px;
-  color:#facc15;
-  word-break:break-all;
+
+.tap-section{
+text-align:center;
+margin:20px 0 30px;
 }
 
-/* ==============================
-   Leaderboard
-============================== */
-#leaderboard div{
-  padding:10px;
-  margin-top:10px;
-  border-radius:12px;
-  background:rgba(255,255,255,.05);
+.star{
+width:170px;
+height:170px;
+
+```
+margin:0 auto;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+border-radius:50%;
+
+background:
+    radial-gradient(
+        circle,
+        rgba(255,215,0,.20),
+        rgba(255,215,0,.08),
+        transparent 75%
+    );
+
+cursor:pointer;
+```
+
 }
 
-/* ==============================
-   Floating Text
-============================== */
-.floating{
-  position:fixed;
-  font-size:24px;
-  font-weight:bold;
-  color:#facc15;
-  pointer-events:none;
-  z-index:9999;
-
-  animation:floatUp 1s linear forwards;
-}
-
-@keyframes floatUp{
-  0%{
-    opacity:1;
-    transform:translateY(0);
-  }
-
-  100%{
-    opacity:0;
-    transform:translateY(-80px);
-  }
-}
-
-/* ==============================
-   Mobile
-============================== */
-@media (max-width:768px){
-
-  .top-card h1{
-    font-size:40px;
-  }
-
-  .logo-img{
-    width:140px;
-    height:140px;
-  }
-
-  .stat h2{
-    font-size:36px;
-  }
-
-  .stats{
-    flex-direction:column;
-  }
-}
-img{
-  max-width:100%;
-  height:auto;
-}
-
-.logo-img{
-  width:160px !important;
-  height:160px !important;
-  max-width:160px !important;
-  max-height:160px !important;
-  object-fit:cover !important;
-  border-radius:24px;
-  display:block;
-  margin:0 auto;
-}
-
-.top-card .logo-img{
-  width:160px !important;
-  height:160px !important;
-}
-/* Avatar Header */
-.avatar{
-    width:90px;
-    height:90px;
-    border-radius:50%;
-    overflow:hidden;
-    flex-shrink:0;
-}
-
-.avatar-img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-
-/* Main Tap Logo */
 .main-logo{
-    width:220px;
-    height:220px;
-    max-width:220px;
-    max-height:220px;
-    object-fit:contain;
-    border-radius:24px;
-    display:block;
-    margin:auto;
+width:105px;
+height:105px;
 
-    filter:
-      drop-shadow(0 0 15px rgba(255,215,0,.8))
-      drop-shadow(0 0 50px rgba(255,215,0,.4));
+```
+object-fit:cover;
+
+border-radius:50%;
+
+border:3px solid rgba(255,215,0,.45);
+
+background:#000;
+
+box-shadow:
+    0 0 12px rgba(255,215,0,.55),
+    0 0 30px rgba(255,215,0,.25);
+
+transition:.15s ease;
+```
+
 }
 
-/* Mobile */
-@media (max-width:768px){
-
-    .main-logo{
-        width:180px;
-        height:180px;
-        max-width:180px;
-        max-height:180px;
-    }
-
-    .avatar{
-        width:70px;
-        height:70px;
-    }
-}
-.bottom-nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    background:#111827;
-    border-top:1px solid rgba(255,255,255,.1);
-
-    display:flex;
-    justify-content:space-around;
-
-    padding:12px 0;
-    z-index:999;
+.star:active .main-logo{
+transform:scale(.92);
 }
 
-.nav-btn{
-    color:white;
-    text-decoration:none;
-    font-size:13px;
-    text-align:center;
+.tap-text{
+margin-top:12px;
+
+```
+color:#facc15;
+
+font-size:13px;
+
+font-weight:700;
+
+letter-spacing:2px;
+```
+
 }
 
-.nav-btn span{
-    display:block;
-    font-size:22px;
-    margin-bottom:4px;
+/* ==============================
+PLAYER STATS
+============================== */
+
+.stats-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
 }
 
-.hero-card{
-    background:linear-gradient(
-        135deg,
+.mini-card{
+background:rgba(255,255,255,.04);
+
+```
+border-radius:18px;
+
+padding:18px;
+```
+
+}
+
+.mini-card h2{
+color:#facc15;
+margin-top:6px;
+}
+
+/* ==============================
+TASKS
+============================== */
+
+.task{
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+```
+gap:10px;
+
+padding:12px 0;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+```
+
+}
+
+.task:last-child{
+border-bottom:none;
+}
+
+/* ==============================
+BUTTONS
+============================== */
+
+button{
+border:none;
+
+```
+padding:14px;
+
+width:100%;
+
+margin-top:10px;
+
+border-radius:14px;
+
+font-weight:bold;
+
+color:#000;
+
+background:
+    linear-gradient(
+        90deg,
         #facc15,
         #f59e0b
     );
 
-    color:#111827;
+cursor:pointer;
 
-    border-radius:28px;
+transition:.15s;
+```
 
-    padding:25px;
-
-    margin-bottom:20px;
 }
 
-.hero-balance{
-    font-size:42px;
-    font-weight:800;
+button:active{
+transform:scale(.97);
 }
 
-.stats-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:12px;
+/* ==============================
+WALLET
+============================== */
+
+#walletAddress{
+margin-top:12px;
+color:#facc15;
+word-break:break-all;
 }
 
-.mini-card{
-    background:rgba(255,255,255,.05);
-    border-radius:20px;
-    padding:18px;
+/* ==============================
+LEADERBOARD
+============================== */
+
+#leaderboard div{
+background:rgba(255,255,255,.04);
+
+```
+padding:10px;
+
+border-radius:12px;
+
+margin-top:8px;
+```
+
 }
 
-.main-logo{
-    width:120px;
-    height:120px;
+/* ==============================
+FLOATING TEXT
+============================== */
 
-    border-radius:50%;
-    object-fit:cover;
+.floating{
+position:fixed;
 
-    box-shadow:
-        0 0 15px rgba(255,215,0,.5),
-        0 0 40px rgba(255,215,0,.25);
+```
+color:#facc15;
 
-    transition:.15s;
+font-size:24px;
+
+font-weight:bold;
+
+pointer-events:none;
+
+z-index:9999;
+
+animation:floatUp 1s linear forwards;
+```
+
+}
+
+@keyframes floatUp{
+
+```
+0%{
+    opacity:1;
+    transform:translateY(0);
+}
+
+100%{
+    opacity:0;
+    transform:translateY(-80px);
+}
+```
+
+}
+
+/* ==============================
+BOTTOM NAV
+============================== */
+
+.bottom-nav{
+position:fixed;
+
+```
+left:0;
+bottom:0;
+
+width:100%;
+
+background:#090909;
+
+border-top:1px solid rgba(255,215,0,.15);
+
+display:flex;
+justify-content:space-around;
+
+padding:10px 0;
+
+z-index:999;
+```
+
+}
+
+.nav-btn{
+color:#ffffff;
+text-decoration:none;
+font-size:12px;
+}
+
+.nav-btn span{
+display:block;
+font-size:22px;
+margin-bottom:3px;
+}
+
+/* ==============================
+MOBILE
+============================== */
+
+@media(max-width:768px){
+
+```
+.top-card h1{
+    font-size:34px;
+}
+
+.stats{
+    flex-direction:column;
+}
+
+.stat h2{
+    font-size:28px;
 }
 
 .star{
-    margin:15px auto;
-}
-.tap-text{
-    font-size:14px;
-    letter-spacing:2px;
-    opacity:.7;
-    margin-top:10px;
-}
-/* ==========================
-   ZERO STARS TAP SECTION
-========================== */
-
-.tap-section{
-    text-align:center;
-    margin:25px 0;
-}
-
-.star{
-    width:180px;
-    height:180px;
-
-    margin:0 auto;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
-    border-radius:50%;
-
-    background:
-        radial-gradient(
-            circle,
-            rgba(255,215,0,.18),
-            rgba(255,215,0,.05),
-            transparent 70%
-        );
-
-    cursor:pointer;
+    width:150px;
+    height:150px;
 }
 
 .main-logo{
-
-    width:130px;
-    height:130px;
-
-    object-fit:cover;
-
-    border-radius:50%;
-
-    border:3px solid rgba(255,215,0,.35);
-
-    background:#000;
-
-    box-shadow:
-        0 0 15px rgba(255,215,0,.45),
-        0 0 35px rgba(255,215,0,.18);
-
-    transition:.15s ease;
+    width:95px;
+    height:95px;
 }
-
-.star:active .main-logo{
-    transform:scale(.92);
-}
-
-.tap-text{
-    margin-top:12px;
-
-    color:#facc15;
-
-    font-size:14px;
-
-    font-weight:700;
-
-    letter-spacing:2px;
-}
-
-/* MOBILE */
-
-@media(max-width:480px){
-
-    .star{
-        width:160px;
-        height:160px;
-    }
-
-    .main-logo{
-        width:115px;
-        height:115px;
-    }
+```
 
 }
