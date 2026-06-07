@@ -379,7 +379,39 @@ alert(
 );
 
 }
+function claimTelegramTask(){
 
+if(game.tasks.telegram){
+alert("Already Claimed");
+return;
+}
+
+game.tasks.telegram = true;
+
+game.coins += 500;
+
+alert("📢 Telegram Reward +500");
+
+update();
+
+}
+
+function claimTwitterTask(){
+
+if(game.tasks.twitter){
+alert("Already Claimed");
+return;
+}
+
+game.tasks.twitter = true;
+
+game.coins += 500;
+
+alert("🐦 X Reward +500");
+
+update();
+
+}
 update();
 
 }
