@@ -45,22 +45,29 @@ async function loadCloudSave(){
   try{
     const snap = await getDoc(doc(db,"players",username));
     if(snap.exists()){
+      const data = snap.data();
       game = {
         ...game,
-        ...snap.data(),
-        coins: Math.max(game.coins, snap.data().coins || 0),
-        level: Math.max(game.level, snap.data().level || 1),
-        power: Math.max(game.power, snap.data().power || 1),
-        miners: Math.max(game.miners, snap.data().miners || 0)
+        ...data,
+        coins: Math.max(game.coins, data.coins || 0),
+        level: Math.max(game.level, data.level || 1),
+        power: Math.max(game.power, data.power || 1),
+        miners: Math.max(game.miners, data.miners || 0)
       };
     }
   } catch(err){ console.error(err); }
   finally { update(); }
 }
 
-async function saveCloud(){ try{ await setDoc(doc(db,"players",username),game);} catch(err){console.error(err);} }
+async function saveCloud(){ 
+  try{ await setDoc(doc(db,"players",username),game);} 
+  catch(err){console.error(err);} 
+}
 
-function save(){ localStorage.setItem("zerostars_save",JSON.stringify(game)); saveCloud(); }
+function save(){ 
+  localStorage.setItem("zerostars_save",JSON.stringify(game)); 
+  saveCloud(); 
+}
 
 // DOM Elements
 const coinsEl=document.getElementById("coins");
