@@ -23,7 +23,11 @@ window.addEventListener("DOMContentLoaded", () => {
 
 </head>
 <body>
+<button id="connectWalletBtn" class="btn">
+Connect Phantom Wallet
+</button>
 
+<p id="walletAddress"></p>
 <div class="container">
 
   <!-- HEADER -->
@@ -160,6 +164,53 @@ window.addEventListener("DOMContentLoaded", () => {
 
 <!-- JS -->
 <script type="module" src="app.js"></script>
+<script>
+const connectBtn = document.getElementById("connectWalletBtn");
+const walletText = document.getElementById("walletAddress");
 
+connectBtn.addEventListener("click", async () => {
+
+  if (!window.solana || !window.solana.isPhantom) {
+    alert("Please install Phantom Wallet");
+    window.open("https://phantom.app/", "_blank");
+    return;
+  }
+
+  try {
+    const response = await window.solana.connect();
+
+    const wallet = response.publicKey.toString();
+
+    walletText.innerHTML =
+      "Wallet: " +
+      wallet.substring(0,6) +
+      "..." +
+      wallet.substring(wallet.length-4);
+
+    localStorage.setItem("walletAddress", wallet);
+
+  } catch (err) {
+    console.log(err);
+  }
+
+});
+
+window.addEventListener("load", () => {
+
+  const savedWallet =
+    localStorage.getItem("walletAddress");
+
+  if(savedWallet){
+
+    walletText.innerHTML =
+      "Wallet: " +
+      savedWallet.substring(0,6) +
+      "..." +
+      savedWallet.substring(savedWallet.length-4);
+
+  }
+
+});
+</script>
 </body>
 </html>
