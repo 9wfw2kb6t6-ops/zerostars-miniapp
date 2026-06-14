@@ -161,9 +161,36 @@ window.addEventListener("DOMContentLoaded", () => {
 <!-- JS -->
 <script type="module" src="app.js"></script>
 <script>
-document.getElementById("connectWalletBtn")
-.addEventListener("click", () => {
-    alert("Button Works");
+const connectBtn = document.getElementById("connectWalletBtn");
+const walletText = document.getElementById("walletAddress");
+
+connectBtn.addEventListener("click", async () => {
+
+  alert("Connect button clicked");
+
+  if (!window.solana) {
+    alert("window.solana not found");
+    return;
+  }
+
+  try {
+
+    const response = await window.solana.connect();
+
+    const wallet = response.publicKey.toString();
+
+    walletText.innerHTML =
+      "Wallet: " +
+      wallet.substring(0,6) +
+      "..." +
+      wallet.substring(wallet.length-4);
+
+  } catch(err) {
+
+    alert("Error: " + err.message);
+
+  }
+
 });
 window.addEventListener("load", () => {
 
