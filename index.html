@@ -165,36 +165,10 @@ Connect Phantom Wallet
 <!-- JS -->
 <script type="module" src="app.js"></script>
 <script>
-const connectBtn = document.getElementById("connectWalletBtn");
-const walletText = document.getElementById("walletAddress");
-
-connectBtn.addEventListener("click", async () => {
-
-  if (!window.solana || !window.solana.isPhantom) {
-    alert("Please install Phantom Wallet");
-    window.open("https://phantom.app/", "_blank");
-    return;
-  }
-
-  try {
-    const response = await window.solana.connect();
-
-    const wallet = response.publicKey.toString();
-
-    walletText.innerHTML =
-      "Wallet: " +
-      wallet.substring(0,6) +
-      "..." +
-      wallet.substring(wallet.length-4);
-
-    localStorage.setItem("walletAddress", wallet);
-
-  } catch (err) {
-    console.log(err);
-  }
-
+document.getElementById("connectWalletBtn")
+.addEventListener("click", () => {
+    alert("Button Works");
 });
-
 window.addEventListener("load", () => {
 
   const savedWallet =
